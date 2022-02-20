@@ -60,3 +60,6 @@ margin_left = 346.0
 margin_right = 460.0
 margin_bottom = 51.0
 text = "Guess"
+
+[connection signal="text_entered" from="V/H/GuessText" to="." method="_on_GuessText_text_entered"]
+[connection signal="pressed" from="V/H/GuessButton" to="." method="_on_GuessButton_pressed"]
