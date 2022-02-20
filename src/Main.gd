@@ -1,4 +1,4 @@
-extends CenterContainer
+extends Control
 
 
 const letter_count := 5
@@ -16,13 +16,15 @@ var letters := []
 var target_word: String
 var current_guess: int
 
+onready var error_text_color_default = $C/V/V/ErrorText.get("custom_colors/font_color")
+
 func _ready() -> void:
 	for _i in range(guess_count):
 		var letter_array := []
 		for _j in range(letter_count):
 			var letter := Letter.instance()
 			letter_array.append(letter)
-			$V/LetterGrid.add_child(letter)
+			$C/V/LetterGrid.add_child(letter)
 		letters.append(letter_array)
 
 	target_word = "godot".to_upper()
@@ -44,11 +46,14 @@ func guess_entered(guess: String) -> void:
 		return
 	guess = guess.to_upper()
 	if guess.length() != letter_count:
+		show_error("Word must be five characters.")
 		return
 
 	var letters_remaining = []
 	for letter in target_word:
 		letters_remaining.append(letter)
+
+	hide_error()
 
 	# Mark all greens
 	for i in range(letter_count):
@@ -64,8 +69,6 @@ func guess_entered(guess: String) -> void:
 				if letters_remaining[j] == guess_letter:
 					letters_remaining.remove(j)
 					break
-
-	print(letters_remaining)
 
 	# Mark all yellows (and grays)
 	for i in range(letter_count):
@@ -85,7 +88,37 @@ func guess_entered(guess: String) -> void:
 		else:
 			letter_instance.color = color_incorrect
 
-
 	current_guess += 1
 	var guess_text_node := find_node("GuessText") as LineEdit
 	guess_text_node.text = ""
+
+	var ended := false
+	var won := false
+
+	if guess == target_word:
+		ended = true
+		won = true
+	elif current_guess >= guess_count:
+		ended = true
+
+	if ended:
+		find_node("GuessButton").disabled = true
+		find_node("GuessText").editable = false
+		if won:
+			show_error("Congrats! You won!", Color(0.4, 0.9, 0.6))
+		else:
+			show_error("Game Over. The word was %s" % target_word, error_text_color_default)
+
+
+func show_error(text: String, color = null):
+	$C/V/V/ErrorText.text = text
+	if typeof(color) == TYPE_COLOR:
+		$ErrorFadeOut.stop()
+		$C/V/V/ErrorText.add_color_override("font_color", color)
+	else:
+		$ErrorFadeOut.play("ErrorFadeOut")
+
+
+func hide_error():
+	$C/V/V/ErrorText.text = ""
+	$ErrorFadeOut.stop()
