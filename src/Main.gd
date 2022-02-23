@@ -27,7 +27,7 @@ func _ready() -> void:
 			$C/V/LetterGrid.add_child(letter)
 		letters.append(letter_array)
 
-	target_word = "godot".to_upper()
+	target_word = Global.generate_word(letter_count)
 	current_guess = 0
 
 
@@ -47,6 +47,9 @@ func guess_entered(guess: String) -> void:
 	guess = guess.to_upper()
 	if guess.length() != letter_count:
 		show_error("Word must be five characters.")
+		return
+	if not Global.is_valid_word(guess):
+		show_error("Not a recognized word.")
 		return
 
 	var letters_remaining = []
