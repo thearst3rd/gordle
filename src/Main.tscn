@@ -46,9 +46,9 @@ __meta__ = {
 }
 
 [node name="V" type="VBoxContainer" parent="C"]
-margin_left = 90.0
+margin_left = 70.0
 margin_top = 377.0
-margin_right = 550.0
+margin_right = 570.0
 margin_bottom = 582.0
 custom_constants/separation = 20
 __meta__ = {
@@ -56,16 +56,16 @@ __meta__ = {
 }
 
 [node name="Title" type="Label" parent="C/V"]
-margin_right = 460.0
+margin_right = 500.0
 margin_bottom = 82.0
 custom_fonts/font = SubResource( 1 )
-text = "Godot Wordle"
+text = "Gordle"
 align = 1
 
 [node name="LetterGrid" type="GridContainer" parent="C/V"]
-margin_left = 230.0
+margin_left = 250.0
 margin_top = 102.0
-margin_right = 230.0
+margin_right = 250.0
 margin_bottom = 102.0
 grow_horizontal = 2
 size_flags_horizontal = 4
@@ -75,11 +75,11 @@ columns = 5
 
 [node name="V" type="VBoxContainer" parent="C/V"]
 margin_top = 122.0
-margin_right = 460.0
+margin_right = 500.0
 margin_bottom = 205.0
 
 [node name="ErrorText" type="Label" parent="C/V/V"]
-margin_right = 460.0
+margin_right = 500.0
 margin_bottom = 28.0
 custom_colors/font_color = Color( 1, 0.31, 0.31, 1 )
 custom_fonts/font = SubResource( 2 )
@@ -87,12 +87,13 @@ align = 1
 
 [node name="H" type="HBoxContainer" parent="C/V/V"]
 margin_top = 32.0
-margin_right = 460.0
+margin_right = 500.0
 margin_bottom = 83.0
+rect_min_size = Vector2( 500, 0 )
 custom_constants/separation = 12
 
 [node name="GuessText" type="LineEdit" parent="C/V/V/H"]
-margin_right = 334.0
+margin_right = 374.0
 margin_bottom = 51.0
 size_flags_horizontal = 3
 max_length = 5
@@ -100,8 +101,8 @@ caret_blink = true
 caret_blink_speed = 0.5
 
 [node name="GuessButton" type="Button" parent="C/V/V/H"]
-margin_left = 346.0
-margin_right = 460.0
+margin_left = 386.0
+margin_right = 500.0
 margin_bottom = 51.0
 text = "Guess"
 
