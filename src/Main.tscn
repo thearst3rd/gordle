@@ -59,7 +59,7 @@ __meta__ = {
 margin_right = 500.0
 margin_bottom = 82.0
 custom_fonts/font = SubResource( 1 )
-text = "Gordle"
+text = "Daily Gordle"
 align = 1
 
 [node name="LetterGrid" type="GridContainer" parent="C/V"]
@@ -90,6 +90,7 @@ margin_top = 32.0
 margin_right = 500.0
 margin_bottom = 83.0
 rect_min_size = Vector2( 500, 0 )
+size_flags_horizontal = 4
 custom_constants/separation = 12
 
 [node name="GuessText" type="LineEdit" parent="C/V/V/H"]

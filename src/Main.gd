@@ -27,7 +27,13 @@ func _ready() -> void:
 			$C/V/LetterGrid.add_child(letter)
 		letters.append(letter_array)
 
-	target_word = Global.generate_word(letter_count)
+	var current_time := OS.get_datetime_from_unix_time(OS.get_unix_time())
+	current_time["hour"] = 0
+	current_time["minute"] = 0
+	current_time["second"] = 0
+	var current_day_unix_time := OS.get_unix_time_from_datetime(current_time)
+
+	target_word = Global.generate_word(letter_count, current_day_unix_time)
 	current_guess = 0
 
 
