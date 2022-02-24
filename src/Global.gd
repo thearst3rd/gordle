@@ -7,6 +7,9 @@ const GENERABLE_WORDS_FILENAME = "res://words/popular-filtered.txt"
 const ALL_WORDS_FILENAME := "res://words/enable1.txt"
 
 
+var daily_mode := true
+
+
 var generable_words: Dictionary
 var all_words: Dictionary
 
@@ -33,20 +36,21 @@ func parse_words(filename: String, min_len: int, max_len: int) -> Dictionary:
 		dict[length].append(line.to_upper())
 	file.close()
 
-	for key in dict.keys():
-		print(key, ": ", dict[key].size())
-
-
 	return dict
 
 
 func generate_word(length: int, random_seed = null) -> String:
+	var random_value: int
 	if typeof(random_seed) == TYPE_INT:
-		seed(random_seed)
+		var rng = RandomNumberGenerator.new()
+		rng.set_seed(random_seed)
+		random_value = rng.randi()
+	else:
+		random_value = randi()
 
 	var words_list := generable_words[length] as Array
 
-	return words_list[randi() % words_list.size()]
+	return words_list[random_value % words_list.size()]
 
 
 func is_valid_word(word: String) -> bool:

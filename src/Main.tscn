@@ -1,4 +1,4 @@
-[gd_scene load_steps=6 format=2]
+[gd_scene load_steps=7 format=2]
 
 [ext_resource path="res://fonts/Louis George Cafe Bold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://src/Main.gd" type="Script" id=2]
@@ -9,6 +9,9 @@ font_data = ExtResource( 1 )
 
 [sub_resource type="DynamicFont" id=2]
 size = 24
+font_data = ExtResource( 1 )
+
+[sub_resource type="DynamicFont" id=4]
 font_data = ExtResource( 1 )
 
 [sub_resource type="Animation" id=3]
@@ -59,7 +62,7 @@ __meta__ = {
 margin_right = 500.0
 margin_bottom = 82.0
 custom_fonts/font = SubResource( 1 )
-text = "Daily Gordle"
+text = "Gordle"
 align = 1
 
 [node name="LetterGrid" type="GridContainer" parent="C/V"]
@@ -107,8 +110,22 @@ margin_right = 500.0
 margin_bottom = 51.0
 text = "Guess"
 
+[node name="MenuButton" type="Button" parent="."]
+anchor_left = 1.0
+anchor_right = 1.0
+margin_left = -65.0
+margin_top = 10.0
+margin_right = -10.0
+margin_bottom = 36.0
+custom_fonts/font = SubResource( 4 )
+text = "Menu"
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
 [node name="ErrorFadeOut" type="AnimationPlayer" parent="."]
 anims/ErrorFadeOut = SubResource( 3 )
 
 [connection signal="text_entered" from="C/V/V/H/GuessText" to="." method="_on_GuessText_text_entered"]
 [connection signal="pressed" from="C/V/V/H/GuessButton" to="." method="_on_GuessButton_pressed"]
+[connection signal="pressed" from="MenuButton" to="." method="_on_MenuButton_pressed"]

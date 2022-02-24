@@ -15,8 +15,10 @@ var letters := []
 
 var target_word: String
 var current_guess: int
+var ended: bool
 
 onready var error_text_color_default = $C/V/V/ErrorText.get("custom_colors/font_color")
+
 
 func _ready() -> void:
 	for _i in range(guess_count):
@@ -27,14 +29,21 @@ func _ready() -> void:
 			$C/V/LetterGrid.add_child(letter)
 		letters.append(letter_array)
 
-	var current_time := OS.get_datetime_from_unix_time(OS.get_unix_time())
-	current_time["hour"] = 0
-	current_time["minute"] = 0
-	current_time["second"] = 0
-	var current_day_unix_time := OS.get_unix_time_from_datetime(current_time)
+	var random_seed = null
+	if Global.daily_mode:
+		var current_time := OS.get_datetime_from_unix_time(OS.get_unix_time())
+		current_time["hour"] = 0
+		current_time["minute"] = 0
+		current_time["second"] = 0
+		random_seed = OS.get_unix_time_from_datetime(current_time)
 
-	target_word = Global.generate_word(letter_count, current_day_unix_time)
+		$C/V/Title.text = "Daily " + $C/V/Title.text
+	else:
+		$C/V/Title.text = "Random " + $C/V/Title.text
+
+	target_word = Global.generate_word(letter_count, random_seed)
 	current_guess = 0
+	ended = false
 
 
 func _on_GuessButton_pressed() -> void:
@@ -101,7 +110,6 @@ func guess_entered(guess: String) -> void:
 	var guess_text_node := find_node("GuessText") as LineEdit
 	guess_text_node.text = ""
 
-	var ended := false
 	var won := false
 
 	if guess == target_word:
@@ -131,3 +139,9 @@ func show_error(text: String, color = null):
 func hide_error():
 	$C/V/V/ErrorText.text = ""
 	$ErrorFadeOut.stop()
+
+
+func _on_MenuButton_pressed() -> void:
+	# TODO check if game is in progress and show confirmation popup
+	var error := get_tree().change_scene("res://src/Menu.tscn")
+	assert(not error)
