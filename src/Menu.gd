@@ -1,4 +1,4 @@
-extends CenterContainer
+extends Control
 
 
 func _ready() -> void:
@@ -19,8 +19,12 @@ func _on_RandomButton_pressed() -> void:
 
 
 func _on_CreditsButton_pressed() -> void:
-	pass # Replace with function body.
+	$Credits.show()
 
 
 func _on_QuitButton_pressed() -> void:
 	get_tree().notification(NOTIFICATION_WM_QUIT_REQUEST)
+
+
+func _on_CreditsBackButton_pressed() -> void:
+	$Credits.hide()

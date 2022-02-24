@@ -45,6 +45,8 @@ func _ready() -> void:
 	current_guess = 0
 	ended = false
 
+	$C/V/V/H/GuessText.grab_focus()
+
 
 func _on_GuessButton_pressed() -> void:
 	var guess_text_node := find_node("GuessText") as LineEdit
