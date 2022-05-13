@@ -22,6 +22,7 @@ onready var error_text_color_default = $C/V/V/ErrorText.get("custom_colors/font_
 
 
 func _ready() -> void:
+	$C/V/LetterGrid.columns = letter_count
 	for _i in range(guess_count):
 		var letter_array := []
 		for _j in range(letter_count):
@@ -48,7 +49,7 @@ func _ready() -> void:
 
 
 func type_letter(letter: String) -> void:
-	if ended or input_guess.length() >= 5:
+	if ended or input_guess.length() >= letter_count:
 		return
 	var index := input_guess.length()
 	letter = letter[0]
