@@ -16,6 +16,7 @@ var letters := []
 var target_word: String
 var current_guess: int
 var ended: bool
+var input_guess: String
 
 onready var error_text_color_default = $C/V/V/ErrorText.get("custom_colors/font_color")
 
@@ -45,27 +46,53 @@ func _ready() -> void:
 	current_guess = 0
 	ended = false
 
-	$C/V/V/H/GuessText.grab_focus()
+
+func type_letter(letter: String) -> void:
+	if ended or input_guess.length() >= 5:
+		return
+	var index := input_guess.length()
+	letter = letter[0]
+	input_guess += letter
+	var letter_instance := letters[current_guess][index] as ColorRect
+	letter_instance.get_node("Label").text = letter
+
+
+func backspace() -> void:
+	if ended or input_guess.length() <= 0:
+		return
+	input_guess = input_guess.substr(0, input_guess.length() - 1)
+	var index := input_guess.length()
+	var letter_instance := letters[current_guess][index] as ColorRect
+	letter_instance.get_node("Label").text = ""
+
+
+func _unhandled_key_input(event: InputEventKey) -> void:
+	if event.is_pressed():
+		var scancode = event.get_scancode()
+		if scancode >= KEY_A and scancode <= KEY_Z:
+			var letter := OS.get_scancode_string(scancode)
+			type_letter(letter)
+			get_tree().set_input_as_handled()
+		elif scancode == KEY_BACKSPACE:
+			backspace()
+			get_tree().set_input_as_handled()
+		elif scancode == KEY_ENTER:
+			guess_entered()
+			get_tree().set_input_as_handled()
 
 
 func _on_GuessButton_pressed() -> void:
-	var guess_text_node := find_node("GuessText") as LineEdit
-	var guess := guess_text_node.text.to_upper()
-	guess_entered(guess)
+	guess_entered()
 
 
-func _on_GuessText_text_entered(new_text: String) -> void:
-	guess_entered(new_text)
-
-
-func guess_entered(guess: String) -> void:
+func guess_entered() -> void:
 	if current_guess >= guess_count:
 		return
-	guess = guess.to_upper()
-	if guess.length() != letter_count:
+	input_guess = input_guess.to_upper()
+	if input_guess.length() != letter_count:
 		show_error("Word must be five characters.")
 		return
-	if not Global.is_valid_word(guess):
+	if not Global.is_valid_word(input_guess):
 		show_error("Not a recognized word.")
 		return
 
@@ -77,7 +104,7 @@ func guess_entered(guess: String) -> void:
 
 	# Mark all greens
 	for i in range(letter_count):
-		var guess_letter := guess[i]
+		var guess_letter := input_guess[i]
 		var target_letter := target_word[i]
 
 		var letter_instance := letters[current_guess][i] as ColorRect
@@ -96,7 +123,7 @@ func guess_entered(guess: String) -> void:
 		if letter_instance.color == color_correct:
 			# Ignore things that are already green
 			continue
-		var guess_letter := guess[i]
+		var guess_letter := input_guess[i]
 		var found := false
 		for j in range(letters_remaining.size()):
 			if letters_remaining[j] == guess_letter:
@@ -109,20 +136,19 @@ func guess_entered(guess: String) -> void:
 			letter_instance.color = color_incorrect
 
 	current_guess += 1
-	var guess_text_node := find_node("GuessText") as LineEdit
-	guess_text_node.text = ""
 
 	var won := false
 
-	if guess == target_word:
+	if input_guess == target_word:
 		ended = true
 		won = true
 	elif current_guess >= guess_count:
 		ended = true
 
+	input_guess = ""
+
 	if ended:
 		find_node("GuessButton").disabled = true
-		find_node("GuessText").editable = false
 		if won:
 			show_error("Congrats! You won!", Color(0.4, 0.9, 0.6))
 		else:
