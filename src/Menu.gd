@@ -3,7 +3,7 @@ extends Control
 
 func _ready() -> void:
 	if OS.get_name() == "HTML5":
-		find_node("QuitButton").hide()
+		$C/V/V2/QuitButton.hide()
 
 
 func _on_DailyButton_pressed() -> void:

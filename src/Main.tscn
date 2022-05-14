@@ -1,4 +1,4 @@
-[gd_scene load_steps=7 format=2]
+[gd_scene load_steps=8 format=2]
 
 [ext_resource path="res://fonts/Louis George Cafe Bold.ttf" type="DynamicFontData" id=1]
 [ext_resource path="res://src/Main.gd" type="Script" id=2]
@@ -11,6 +11,10 @@ font_data = ExtResource( 1 )
 size = 24
 font_data = ExtResource( 1 )
 
+[sub_resource type="DynamicFont" id=5]
+size = 40
+font_data = ExtResource( 1 )
+
 [sub_resource type="DynamicFont" id=4]
 font_data = ExtResource( 1 )
 
@@ -18,7 +22,7 @@ font_data = ExtResource( 1 )
 resource_name = "ErrorFadeOut"
 length = 6.0
 tracks/0/type = "value"
-tracks/0/path = NodePath("C/V/V/ErrorText:custom_colors/font_color")
+tracks/0/path = NodePath("C/V/ErrorText:custom_colors/font_color")
 tracks/0/interp = 1
 tracks/0/loop_wrap = true
 tracks/0/imported = false
@@ -41,31 +45,28 @@ color_correct = Color( 0, 0.619608, 0.298039, 1 )
 [node name="C" type="CenterContainer" parent="."]
 anchor_right = 1.0
 anchor_bottom = 1.0
-__meta__ = {
-"_edit_use_anchors_": false
-}
 
 [node name="V" type="VBoxContainer" parent="C"]
-margin_left = 209.0
-margin_top = 379.0
-margin_right = 430.0
-margin_bottom = 580.0
+margin_left = 52.0
+margin_top = 292.0
+margin_right = 588.0
+margin_bottom = 667.0
 custom_constants/separation = 20
 __meta__ = {
 "_edit_use_anchors_": false
 }
 
 [node name="Title" type="Label" parent="C/V"]
-margin_right = 221.0
+margin_right = 536.0
 margin_bottom = 82.0
 custom_fonts/font = SubResource( 1 )
 text = "Gordle"
 align = 1
 
 [node name="LetterGrid" type="GridContainer" parent="C/V"]
-margin_left = 110.0
+margin_left = 268.0
 margin_top = 102.0
-margin_right = 110.0
+margin_right = 268.0
 margin_bottom = 102.0
 grow_horizontal = 2
 size_flags_horizontal = 4
@@ -73,24 +74,231 @@ custom_constants/vseparation = 8
 custom_constants/hseparation = 8
 columns = 5
 
-[node name="V" type="VBoxContainer" parent="C/V"]
+[node name="ErrorText" type="Label" parent="C/V"]
 margin_top = 122.0
-margin_right = 221.0
-margin_bottom = 201.0
-
-[node name="ErrorText" type="Label" parent="C/V/V"]
-margin_right = 221.0
-margin_bottom = 28.0
+margin_right = 536.0
+margin_bottom = 150.0
 custom_colors/font_color = Color( 1, 0.31, 0.31, 1 )
 custom_fonts/font = SubResource( 2 )
 align = 1
 
-[node name="GuessButton" type="Button" parent="C/V/V"]
-margin_left = 53.0
-margin_top = 32.0
-margin_right = 167.0
-margin_bottom = 79.0
+[node name="V" type="VBoxContainer" parent="C/V"]
+margin_top = 170.0
+margin_right = 536.0
+margin_bottom = 375.0
+
+[node name="HRow1" type="HBoxContainer" parent="C/V/V"]
+margin_right = 536.0
+margin_bottom = 47.0
 size_flags_horizontal = 4
+
+[node name="ButtonQ" type="Button" parent="C/V/V/HRow1"]
+margin_right = 50.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "Q"
+
+[node name="ButtonW" type="Button" parent="C/V/V/HRow1"]
+margin_left = 54.0
+margin_right = 104.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "W"
+
+[node name="ButtonE" type="Button" parent="C/V/V/HRow1"]
+margin_left = 108.0
+margin_right = 158.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "E"
+
+[node name="ButtonR" type="Button" parent="C/V/V/HRow1"]
+margin_left = 162.0
+margin_right = 212.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "R"
+
+[node name="ButtonT" type="Button" parent="C/V/V/HRow1"]
+margin_left = 216.0
+margin_right = 266.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "T"
+
+[node name="ButtonY" type="Button" parent="C/V/V/HRow1"]
+margin_left = 270.0
+margin_right = 320.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "Y"
+
+[node name="ButtonU" type="Button" parent="C/V/V/HRow1"]
+margin_left = 324.0
+margin_right = 374.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "U"
+
+[node name="ButtonI" type="Button" parent="C/V/V/HRow1"]
+margin_left = 378.0
+margin_right = 428.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "I"
+
+[node name="ButtonO" type="Button" parent="C/V/V/HRow1"]
+margin_left = 432.0
+margin_right = 482.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "O"
+
+[node name="ButtonP" type="Button" parent="C/V/V/HRow1"]
+margin_left = 486.0
+margin_right = 536.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "P"
+
+[node name="HRow2" type="HBoxContainer" parent="C/V/V"]
+margin_left = 27.0
+margin_top = 51.0
+margin_right = 509.0
+margin_bottom = 98.0
+size_flags_horizontal = 4
+
+[node name="ButtonA" type="Button" parent="C/V/V/HRow2"]
+margin_right = 50.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "A"
+
+[node name="ButtonS" type="Button" parent="C/V/V/HRow2"]
+margin_left = 54.0
+margin_right = 104.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "S"
+
+[node name="ButtonD" type="Button" parent="C/V/V/HRow2"]
+margin_left = 108.0
+margin_right = 158.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "D"
+
+[node name="ButtonF" type="Button" parent="C/V/V/HRow2"]
+margin_left = 162.0
+margin_right = 212.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "F"
+
+[node name="ButtonG" type="Button" parent="C/V/V/HRow2"]
+margin_left = 216.0
+margin_right = 266.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "G"
+
+[node name="ButtonH" type="Button" parent="C/V/V/HRow2"]
+margin_left = 270.0
+margin_right = 320.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "H"
+
+[node name="ButtonJ" type="Button" parent="C/V/V/HRow2"]
+margin_left = 324.0
+margin_right = 374.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "J"
+
+[node name="ButtonK" type="Button" parent="C/V/V/HRow2"]
+margin_left = 378.0
+margin_right = 428.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "K"
+
+[node name="ButtonL" type="Button" parent="C/V/V/HRow2"]
+margin_left = 432.0
+margin_right = 482.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "L"
+
+[node name="HRow3" type="HBoxContainer" parent="C/V/V"]
+margin_left = 33.0
+margin_top = 102.0
+margin_right = 503.0
+margin_bottom = 149.0
+size_flags_horizontal = 4
+
+[node name="ButtonZ" type="Button" parent="C/V/V/HRow3"]
+margin_right = 50.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "Z"
+
+[node name="ButtonX" type="Button" parent="C/V/V/HRow3"]
+margin_left = 54.0
+margin_right = 104.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "X"
+
+[node name="ButtonC" type="Button" parent="C/V/V/HRow3"]
+margin_left = 108.0
+margin_right = 158.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "C"
+
+[node name="ButtonV" type="Button" parent="C/V/V/HRow3"]
+margin_left = 162.0
+margin_right = 212.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "V"
+
+[node name="ButtonB" type="Button" parent="C/V/V/HRow3"]
+margin_left = 216.0
+margin_right = 266.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "B"
+
+[node name="ButtonN" type="Button" parent="C/V/V/HRow3"]
+margin_left = 270.0
+margin_right = 320.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "N"
+
+[node name="ButtonM" type="Button" parent="C/V/V/HRow3"]
+margin_left = 324.0
+margin_right = 374.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "M"
+
+[node name="ButtonBksp" type="Button" parent="C/V/V/HRow3"]
+margin_left = 378.0
+margin_right = 470.0
+margin_bottom = 47.0
+rect_min_size = Vector2( 50, 0 )
+text = "bksp"
+
+[node name="GuessButton" type="Button" parent="C/V/V"]
+margin_left = 205.0
+margin_top = 153.0
+margin_right = 330.0
+margin_bottom = 205.0
+size_flags_horizontal = 4
+custom_fonts/font = SubResource( 5 )
 text = "Guess"
 
 [node name="MenuButton" type="Button" parent="."]
@@ -109,5 +317,6 @@ __meta__ = {
 [node name="ErrorFadeOut" type="AnimationPlayer" parent="."]
 anims/ErrorFadeOut = SubResource( 3 )
 
+[connection signal="pressed" from="C/V/V/HRow3/ButtonBksp" to="." method="_on_ButtonBksp_pressed"]
 [connection signal="pressed" from="C/V/V/GuessButton" to="." method="_on_GuessButton_pressed"]
 [connection signal="pressed" from="MenuButton" to="." method="_on_MenuButton_pressed"]

@@ -12,13 +12,14 @@ export var color_correct: Color = Color()
 
 # An array of arrays of the letter nodes
 var letters := []
+var keyboard_buttons := {}
 
 var target_word: String
 var current_guess: int
 var ended: bool
 var input_guess: String
 
-onready var error_text_color_default = $C/V/V/ErrorText.get("custom_colors/font_color")
+onready var error_text_color_default = $C/V/ErrorText.get("custom_colors/font_color")
 
 
 func _ready() -> void:
@@ -46,6 +47,13 @@ func _ready() -> void:
 	target_word = Global.generate_word(letter_count, random_seed)
 	current_guess = 0
 	ended = false
+
+	for i in range(0, 26):
+		var letter := char(ord("A") + i)
+		var keyboard_button: Button = $C/V/V.find_node("Button" + letter)
+		keyboard_buttons[letter] = keyboard_button
+		var error := keyboard_button.connect("pressed", self, "type_letter", [letter])
+		assert(not error)
 
 
 func type_letter(letter: String) -> void:
@@ -112,6 +120,7 @@ func guess_entered() -> void:
 		letter_instance.get_node("Label").text = guess_letter
 		if guess_letter == target_letter:
 			letter_instance.color = color_correct
+			keyboard_buttons[target_letter].modulate = color_correct
 			# Remove that one letter from remaining letters (is there a function for this?)
 			for j in range(letters_remaining.size()):
 				if letters_remaining[j] == guess_letter:
@@ -133,8 +142,11 @@ func guess_entered() -> void:
 				break
 		if found:
 			letter_instance.color = color_misplaced
+			if keyboard_buttons[guess_letter].modulate != color_correct:
+				keyboard_buttons[guess_letter].modulate = color_misplaced
 		else:
 			letter_instance.color = color_incorrect
+			keyboard_buttons[guess_letter].modulate = color_incorrect
 
 	current_guess += 1
 
@@ -149,7 +161,10 @@ func guess_entered() -> void:
 	input_guess = ""
 
 	if ended:
-		find_node("GuessButton").disabled = true
+		$C/V/V/GuessButton.disabled = true
+		for letter in keyboard_buttons:
+			keyboard_buttons[letter].disabled = true
+		$C/V/V/HRow3/ButtonBksp.disabled = true
 		if won:
 			show_error("Congrats! You won!", Color(0.4, 0.9, 0.6))
 		else:
@@ -157,16 +172,16 @@ func guess_entered() -> void:
 
 
 func show_error(text: String, color = null):
-	$C/V/V/ErrorText.text = text
+	$C/V/ErrorText.text = text
 	if typeof(color) == TYPE_COLOR:
 		$ErrorFadeOut.stop()
-		$C/V/V/ErrorText.add_color_override("font_color", color)
+		$C/V/ErrorText.add_color_override("font_color", color)
 	else:
 		$ErrorFadeOut.play("ErrorFadeOut")
 
 
 func hide_error():
-	$C/V/V/ErrorText.text = ""
+	$C/V/ErrorText.text = ""
 	$ErrorFadeOut.stop()
 
 
@@ -174,3 +189,7 @@ func _on_MenuButton_pressed() -> void:
 	# TODO check if game is in progress and show confirmation popup
 	var error := get_tree().change_scene("res://src/Menu.tscn")
 	assert(not error)
+
+
+func _on_ButtonBksp_pressed() -> void:
+	backspace()
