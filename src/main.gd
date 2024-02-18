@@ -156,7 +156,8 @@ func guess_entered() -> void:
 				keyboard_buttons[guess_letter].modulate = color_misplaced
 		else:
 			letter_instance.color = color_incorrect
-			keyboard_buttons[guess_letter].modulate = color_incorrect
+			if keyboard_buttons[guess_letter].modulate not in [color_correct, color_misplaced]:
+				keyboard_buttons[guess_letter].modulate = color_incorrect
 
 	current_guess += 1
 
