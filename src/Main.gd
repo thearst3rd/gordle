@@ -6,9 +6,9 @@ const guess_count := 6
 
 const Letter = preload("res://src/Letter.tscn")
 
-export var color_incorrect: Color = Color()
-export var color_misplaced: Color = Color()
-export var color_correct: Color = Color()
+@export var color_incorrect: Color = Color()
+@export var color_misplaced: Color = Color()
+@export var color_correct: Color = Color()
 
 # An array of arrays of the letter nodes
 var letters := []
@@ -19,7 +19,7 @@ var current_guess: int
 var ended: bool
 var input_guess: String
 
-onready var error_text_color_default = $C/V/ErrorText.get("custom_colors/font_color")
+@onready var error_text_color_default = $C/V/ErrorText.get("theme_override_colors/font_color")
 
 
 func _ready() -> void:
@@ -27,18 +27,18 @@ func _ready() -> void:
 	for _i in range(guess_count):
 		var letter_array := []
 		for _j in range(letter_count):
-			var letter := Letter.instance()
+			var letter := Letter.instantiate()
 			letter_array.append(letter)
 			$C/V/LetterGrid.add_child(letter)
 		letters.append(letter_array)
 
 	var random_seed = null
 	if Global.daily_mode:
-		var current_time := OS.get_datetime_from_unix_time(OS.get_unix_time())
+		var current_time := Time.get_datetime_dict_from_system_from_unix_time(Time.get_unix_time_from_system())
 		current_time["hour"] = 0
 		current_time["minute"] = 0
 		current_time["second"] = 0
-		random_seed = OS.get_unix_time_from_datetime(current_time)
+		random_seed = Time.get_unix_time_from_system_from_datetime(current_time)
 
 		$C/V/Title.text = "Daily " + $C/V/Title.text
 	else:
@@ -50,9 +50,9 @@ func _ready() -> void:
 
 	for i in range(0, 26):
 		var letter := char(ord("A") + i)
-		var keyboard_button: Button = $C/V/V.find_node("Button" + letter)
+		var keyboard_button: Button = $C/V/V.find_child("Button" + letter)
 		keyboard_buttons[letter] = keyboard_button
-		var error := keyboard_button.connect("pressed", self, "type_letter", [letter])
+		var error := keyboard_button.connect("pressed", Callable(self, "type_letter").bind(letter))
 		assert(not error)
 
 
@@ -75,19 +75,19 @@ func backspace() -> void:
 	letter_instance.get_node("Label").text = ""
 
 
-func _unhandled_key_input(event: InputEventKey) -> void:
+func _unhandled_key_input(event: InputEvent) -> void:
 	if event.is_pressed():
-		var scancode = event.get_scancode()
-		if scancode >= KEY_A and scancode <= KEY_Z:
-			var letter := OS.get_scancode_string(scancode)
+		var keycode = event.get_keycode()
+		if keycode >= KEY_A and keycode <= KEY_Z:
+			var letter := OS.get_keycode_string(keycode)
 			type_letter(letter)
-			get_tree().set_input_as_handled()
-		elif scancode == KEY_BACKSPACE:
+			get_viewport().set_input_as_handled()
+		elif keycode == KEY_BACKSPACE:
 			backspace()
-			get_tree().set_input_as_handled()
-		elif scancode == KEY_ENTER:
+			get_viewport().set_input_as_handled()
+		elif keycode == KEY_ENTER:
 			guess_entered()
-			get_tree().set_input_as_handled()
+			get_viewport().set_input_as_handled()
 
 
 func _on_GuessButton_pressed() -> void:
@@ -175,7 +175,7 @@ func show_error(text: String, color = null):
 	$C/V/ErrorText.text = text
 	if typeof(color) == TYPE_COLOR:
 		$ErrorFadeOut.stop()
-		$C/V/ErrorText.add_color_override("font_color", color)
+		$C/V/ErrorText.add_theme_color_override("font_color", color)
 	else:
 		$ErrorFadeOut.play("ErrorFadeOut")
 
@@ -187,7 +187,7 @@ func hide_error():
 
 func _on_MenuButton_pressed() -> void:
 	# TODO check if game is in progress and show confirmation popup
-	var error := get_tree().change_scene("res://src/Menu.tscn")
+	var error := get_tree().change_scene_to_file("res://src/Menu.tscn")
 	assert(not error)
 
 

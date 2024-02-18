@@ -1,0 +1,33 @@
+[remap]
+
+importer="font_data_dynamic"
+type="FontFile"
+uid="uid://cnj74xysjc783"
+path="res://.godot/imported/Louis George Cafe Light Italic.ttf-3bc639f66fc8cc508c5f453a5e244ec8.fontdata"
+
+[deps]
+
+source_file="res://fonts/Louis George Cafe Light Italic.ttf"
+dest_files=["res://.godot/imported/Louis George Cafe Light Italic.ttf-3bc639f66fc8cc508c5f453a5e244ec8.fontdata"]
+
+[params]
+
+Rendering=null
+antialiasing=1
+generate_mipmaps=false
+multichannel_signed_distance_field=false
+msdf_pixel_range=8
+msdf_size=48
+allow_system_fallback=true
+force_autohinter=false
+hinting=1
+subpixel_positioning=1
+oversampling=0.0
+Fallbacks=null
+fallbacks=[]
+Compress=null
+compress=true
+preload=[]
+language_support={}
+script_support={}
+opentype_features={}
