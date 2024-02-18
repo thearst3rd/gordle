@@ -4,7 +4,7 @@ extends Control
 const letter_count := 5
 const guess_count := 6
 
-const Letter = preload("res://src/letter.tscn")
+const Letter := preload("res://src/letter.tscn")
 
 @export var color_incorrect: Color = Color()
 @export var color_misplaced: Color = Color()
@@ -19,17 +19,27 @@ var current_guess: int
 var ended: bool
 var input_guess: String
 
-@onready var error_text_color_default = $C/V/ErrorText.label_settings.font_color
+@onready var title: Label = %Title
+@onready var letter_grid: GridContainer = %LetterGrid
+@onready var info_text: Label = %InfoText
+
+@onready var keyboard_vbox: VBoxContainer = %KeyboardVBox
+@onready var guess_button: Button = %GuessButton
+@onready var backspace_button: Button = %ButtonBksp
+
+@onready var info_text_animation: AnimationPlayer = %InfoTextAnimation
+
+@onready var error_text_color_default := info_text.label_settings.font_color
 
 
 func _ready() -> void:
-	$C/V/LetterGrid.columns = letter_count
+	letter_grid.columns = letter_count
 	for _i in range(guess_count):
 		var letter_array := []
 		for _j in range(letter_count):
 			var letter := Letter.instantiate()
 			letter_array.append(letter)
-			$C/V/LetterGrid.add_child(letter)
+			letter_grid.add_child(letter)
 		letters.append(letter_array)
 
 	var random_seed = null
@@ -40,9 +50,9 @@ func _ready() -> void:
 		current_time["second"] = 0
 		random_seed = Time.get_unix_time_from_datetime_dict(current_time)
 
-		$C/V/Title.text = "Daily " + $C/V/Title.text
+		title.text = "Daily " + title.text
 	else:
-		$C/V/Title.text = "Random " + $C/V/Title.text
+		title.text = "Random " + title.text
 
 	target_word = Global.generate_word(letter_count, random_seed)
 	current_guess = 0
@@ -50,7 +60,7 @@ func _ready() -> void:
 
 	for i in range(0, 26):
 		var letter := char("A".unicode_at(0) + i)
-		var keyboard_button: Button = $C/V/V.find_child("Button" + letter)
+		var keyboard_button: Button = keyboard_vbox.find_child("Button" + letter)
 		keyboard_buttons[letter] = keyboard_button
 		var error := keyboard_button.connect("pressed", Callable(self, "type_letter").bind(letter))
 		assert(not error)
@@ -109,7 +119,7 @@ func guess_entered() -> void:
 	for letter in target_word:
 		letters_remaining.append(letter)
 
-	hide_error()
+	hide_info()
 
 	# Mark all greens
 	for i in range(letter_count):
@@ -161,28 +171,34 @@ func guess_entered() -> void:
 	input_guess = ""
 
 	if ended:
-		$C/V/V/GuessButton.disabled = true
+		guess_button.disabled = true
 		for letter in keyboard_buttons:
 			keyboard_buttons[letter].disabled = true
-		$C/V/V/HRow3/ButtonBksp.disabled = true
+		backspace_button.disabled = true
 		if won:
-			show_error("Congrats! You won!", Color(0.4, 0.9, 0.6))
+			show_info("Congrats! You won!", Color(0.4, 0.9, 0.6))
 		else:
-			show_error("Game Over. The word was %s" % target_word, error_text_color_default)
+			show_info("Game Over. The word was %s" % target_word, error_text_color_default)
 
 
-func show_error(text: String, color = null):
-	$C/V/ErrorText.text = text
-	if typeof(color) == TYPE_COLOR:
-		$ErrorFadeOut.stop()
-		$C/V/ErrorText.label_settings.font_color = color
-	else:
-		$ErrorFadeOut.play("ErrorFadeOut")
+func show_error(text: String):
+	info_text.text = text
+	info_text.label_settings.font_color = error_text_color_default
+	info_text_animation.stop()
+	info_text_animation.play("ErrorMessage")
+	info_text.show()
 
 
-func hide_error():
-	$C/V/ErrorText.text = ""
-	$ErrorFadeOut.stop()
+func show_info(text: String, color: Color):
+	info_text_animation.play("RESET")
+	info_text.text = text
+	info_text.label_settings.font_color = color
+	info_text.show()
+
+
+func hide_info():
+	info_text_animation.play("RESET")
+	info_text.hide()
 
 
 func _on_MenuButton_pressed() -> void:
