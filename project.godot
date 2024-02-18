@@ -11,13 +11,13 @@ config_version=5
 [application]
 
 config/name="gordle"
-run/main_scene="res://src/Menu.tscn"
+run/main_scene="res://src/menu.tscn"
 config/features=PackedStringArray("4.2")
 config/icon="res://icon.png"
 
 [autoload]
 
-Global="*res://src/Global.gd"
+Global="*res://src/global.gd"
 
 [display]
 
@@ -28,7 +28,7 @@ window/handheld/orientation="portrait"
 
 [gui]
 
-theme/custom_font="res://fonts/DefaultFont.tres"
+theme/custom="res://resources/default_theme.tres"
 
 [physics]
 

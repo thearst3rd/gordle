@@ -4,7 +4,7 @@ extends Control
 const letter_count := 5
 const guess_count := 6
 
-const Letter = preload("res://src/Letter.tscn")
+const Letter = preload("res://src/letter.tscn")
 
 @export var color_incorrect: Color = Color()
 @export var color_misplaced: Color = Color()
@@ -19,7 +19,7 @@ var current_guess: int
 var ended: bool
 var input_guess: String
 
-@onready var error_text_color_default = $C/V/ErrorText.get("theme_override_colors/font_color")
+@onready var error_text_color_default = $C/V/ErrorText.label_settings.font_color
 
 
 func _ready() -> void:
@@ -34,11 +34,11 @@ func _ready() -> void:
 
 	var random_seed = null
 	if Global.daily_mode:
-		var current_time := Time.get_datetime_dict_from_system_from_unix_time(Time.get_unix_time_from_system())
+		var current_time := Time.get_datetime_dict_from_system(true)
 		current_time["hour"] = 0
 		current_time["minute"] = 0
 		current_time["second"] = 0
-		random_seed = Time.get_unix_time_from_system_from_datetime(current_time)
+		random_seed = Time.get_unix_time_from_datetime_dict(current_time)
 
 		$C/V/Title.text = "Daily " + $C/V/Title.text
 	else:
@@ -49,7 +49,7 @@ func _ready() -> void:
 	ended = false
 
 	for i in range(0, 26):
-		var letter := char(ord("A") + i)
+		var letter := char("A".unicode_at(0) + i)
 		var keyboard_button: Button = $C/V/V.find_child("Button" + letter)
 		keyboard_buttons[letter] = keyboard_button
 		var error := keyboard_button.connect("pressed", Callable(self, "type_letter").bind(letter))
@@ -124,7 +124,7 @@ func guess_entered() -> void:
 			# Remove that one letter from remaining letters (is there a function for this?)
 			for j in range(letters_remaining.size()):
 				if letters_remaining[j] == guess_letter:
-					letters_remaining.remove(j)
+					letters_remaining.remove_at(j)
 					break
 
 	# Mark all yellows (and grays)
@@ -138,7 +138,7 @@ func guess_entered() -> void:
 		for j in range(letters_remaining.size()):
 			if letters_remaining[j] == guess_letter:
 				found = true
-				letters_remaining.remove(j)
+				letters_remaining.remove_at(j)
 				break
 		if found:
 			letter_instance.color = color_misplaced
@@ -175,7 +175,7 @@ func show_error(text: String, color = null):
 	$C/V/ErrorText.text = text
 	if typeof(color) == TYPE_COLOR:
 		$ErrorFadeOut.stop()
-		$C/V/ErrorText.add_theme_color_override("font_color", color)
+		$C/V/ErrorText.label_settings.font_color = color
 	else:
 		$ErrorFadeOut.play("ErrorFadeOut")
 
@@ -187,7 +187,7 @@ func hide_error():
 
 func _on_MenuButton_pressed() -> void:
 	# TODO check if game is in progress and show confirmation popup
-	var error := get_tree().change_scene_to_file("res://src/Menu.tscn")
+	var error := get_tree().change_scene_to_file("res://src/menu.tscn")
 	assert(not error)
 
 

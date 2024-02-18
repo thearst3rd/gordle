@@ -1,0 +1,202 @@
+[gd_scene load_steps=9 format=3 uid="uid://173vb7ig0vfd"]
+
+[ext_resource type="Script" path="res://src/menu.gd" id="1_53n2c"]
+[ext_resource type="FontFile" uid="uid://b7jasa607pvfx" path="res://fonts/Louis George Cafe Bold.ttf" id="2_4qysc"]
+
+[sub_resource type="FontFile" id="1"]
+fallbacks = Array[Font]([ExtResource("2_4qysc")])
+cache/0/96/0/ascent = 0.0
+cache/0/96/0/descent = 0.0
+cache/0/96/0/underline_position = 0.0
+cache/0/96/0/underline_thickness = 0.0
+cache/0/96/0/scale = 1.0
+cache/0/96/0/kerning_overrides/96/0 = Vector2(0, 0)
+cache/0/96/0/kerning_overrides/16/0 = Vector2(0, 0)
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/16/0/kerning_overrides/96/0 = Vector2(0, 0)
+cache/0/16/0/kerning_overrides/16/0 = Vector2(0, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_ea50h"]
+font_size = 96
+
+[sub_resource type="FontFile" id="2"]
+fallbacks = Array[Font]([ExtResource("2_4qysc")])
+cache/0/24/0/ascent = 0.0
+cache/0/24/0/descent = 0.0
+cache/0/24/0/underline_position = 0.0
+cache/0/24/0/underline_thickness = 0.0
+cache/0/24/0/scale = 1.0
+cache/0/24/0/kerning_overrides/24/0 = Vector2(0, 0)
+cache/0/24/0/kerning_overrides/16/0 = Vector2(0, 0)
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/16/0/kerning_overrides/24/0 = Vector2(0, 0)
+cache/0/16/0/kerning_overrides/16/0 = Vector2(0, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_kumw7"]
+font_size = 24
+
+[sub_resource type="LabelSettings" id="LabelSettings_17upj"]
+font_size = 24
+
+[sub_resource type="LabelSettings" id="LabelSettings_cdviw"]
+font_size = 24
+
+[node name="Menu" type="Control"]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+script = ExtResource("1_53n2c")
+
+[node name="C" type="CenterContainer" parent="."]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+
+[node name="V" type="VBoxContainer" parent="C"]
+layout_mode = 2
+theme_override_constants/separation = 80
+
+[node name="V" type="VBoxContainer" parent="C/V"]
+layout_mode = 2
+
+[node name="Title" type="Label" parent="C/V/V"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("1")
+text = "Gordle"
+label_settings = SubResource("LabelSettings_ea50h")
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="C/V/V"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("2")
+text = "Wordle in Godot"
+label_settings = SubResource("LabelSettings_kumw7")
+horizontal_alignment = 1
+
+[node name="V2" type="VBoxContainer" parent="C/V"]
+layout_mode = 2
+theme_override_constants/separation = 30
+
+[node name="V" type="VBoxContainer" parent="C/V/V2"]
+layout_mode = 2
+
+[node name="DailyButton" type="Button" parent="C/V/V2/V"]
+layout_mode = 2
+text = "Daily Gordle"
+
+[node name="Label" type="Label" parent="C/V/V2/V"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("2")
+text = "Changes every day
+at midnight GMT"
+label_settings = SubResource("LabelSettings_17upj")
+horizontal_alignment = 1
+
+[node name="V2" type="VBoxContainer" parent="C/V/V2"]
+custom_minimum_size = Vector2(310, 0)
+layout_mode = 2
+
+[node name="RandomButton" type="Button" parent="C/V/V2/V2"]
+layout_mode = 2
+text = "Random Gordle"
+
+[node name="Label" type="Label" parent="C/V/V2/V2"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("2")
+text = "Different every time"
+label_settings = SubResource("LabelSettings_cdviw")
+horizontal_alignment = 1
+
+[node name="CreditsButton" type="Button" parent="C/V/V2"]
+layout_mode = 2
+text = "Licenses"
+
+[node name="QuitButton" type="Button" parent="C/V/V2"]
+layout_mode = 2
+text = "Quit"
+
+[node name="Credits" type="ColorRect" parent="."]
+visible = false
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+color = Color(0.054902, 0.054902, 0.105882, 0.784314)
+
+[node name="M" type="MarginContainer" parent="Credits"]
+layout_mode = 0
+anchor_right = 1.0
+anchor_bottom = 1.0
+theme_override_constants/margin_left = 50
+theme_override_constants/margin_top = 50
+theme_override_constants/margin_right = 50
+theme_override_constants/margin_bottom = 50
+
+[node name="V" type="VBoxContainer" parent="Credits/M"]
+layout_mode = 2
+
+[node name="Panel" type="PanelContainer" parent="Credits/M/V"]
+layout_mode = 2
+size_flags_vertical = 3
+
+[node name="RichTextLabel" type="RichTextLabel" parent="Credits/M/V/Panel"]
+layout_mode = 2
+theme_override_font_sizes/normal_font_size = 16
+theme_override_font_sizes/bold_font_size = 36
+bbcode_enabled = true
+text = "[center][b]Godot Engine[/b][/center]
+
+This game uses Godot Engine, available under the following license:
+
+Copyright (c) 2014-present Godot Engine contributors. Copyright (c) 2007-2014 Juan Linietsky, Ariel Manzur.
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+[center][b]FreeType[/b][/center]
+
+Portions of this software are copyright © 1996-2023 The FreeType Project (www.freetype.org). All rights reserved.
+
+[center][b]ENet[/b][/center]
+
+Copyright (c) 2002-2020 Lee Salzman
+
+Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the \"Software\"), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED \"AS IS\", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+[center][b]mbed TLS[/b][/center]
+
+Copyright The Mbed TLS Contributors
+
+Licensed under the Apache License, Version 2.0 (the \"License\"); you may not use this file except in compliance with the License. You may obtain a copy of the License at
+
+http://www.apache.org/licenses/LICENSE-2.0
+
+Unless required by applicable law or agreed to in writing, software distributed under the License is distributed on an \"AS IS\" BASIS, WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the License for the specific language governing permissions and limitations under the License."
+
+[node name="CreditsBackButton" type="Button" parent="Credits/M/V"]
+layout_mode = 2
+size_flags_horizontal = 8
+text = "Back"
+
+[connection signal="pressed" from="C/V/V2/V/DailyButton" to="." method="_on_DailyButton_pressed"]
+[connection signal="pressed" from="C/V/V2/V2/RandomButton" to="." method="_on_RandomButton_pressed"]
+[connection signal="pressed" from="C/V/V2/CreditsButton" to="." method="_on_CreditsButton_pressed"]
+[connection signal="pressed" from="C/V/V2/QuitButton" to="." method="_on_QuitButton_pressed"]
+[connection signal="pressed" from="Credits/M/V/CreditsBackButton" to="." method="_on_CreditsBackButton_pressed"]

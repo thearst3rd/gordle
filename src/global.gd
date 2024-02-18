@@ -25,9 +25,8 @@ func parse_words(filename: String, min_len: int, max_len: int) -> Dictionary:
 	for i in range(min_len, max_len + 1):
 		dict[i] = []
 
-	var file := File.new()
-	var error := file.open(filename, File.READ)
-	assert(not error)
+	var file := FileAccess.open(filename, FileAccess.READ)
+	assert(file != null)
 	while not file.eof_reached():
 		var line := file.get_line()
 		var length = line.length()
@@ -61,3 +60,8 @@ func is_valid_word(word: String) -> bool:
 	var words_list := all_words[length] as Array
 
 	return word.to_upper() in words_list
+
+
+func _notification(what: int) -> void:
+	if what == NOTIFICATION_WM_CLOSE_REQUEST:
+		get_tree().quit()
