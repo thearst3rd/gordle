@@ -1,9 +1,13 @@
 extends Control
 
 
+@onready var quit_button: Button = %QuitButton
+@onready var credits: ColorRect = %Credits
+
+
 func _ready() -> void:
-	if OS.get_name() == "HTML5":
-		$C/V/V2/QuitButton.hide()
+	if OS.has_feature("web"):
+		quit_button.hide()
 
 
 func _on_DailyButton_pressed() -> void:
@@ -19,7 +23,7 @@ func _on_RandomButton_pressed() -> void:
 
 
 func _on_CreditsButton_pressed() -> void:
-	$Credits.show()
+	credits.show()
 
 
 func _on_QuitButton_pressed() -> void:
@@ -27,4 +31,4 @@ func _on_QuitButton_pressed() -> void:
 
 
 func _on_CreditsBackButton_pressed() -> void:
-	$Credits.hide()
+	credits.hide()
