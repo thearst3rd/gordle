@@ -191,14 +191,14 @@ func show_error(text: String):
 
 
 func show_info(text: String, color: Color):
-	info_text_animation.play("RESET")
+	info_text_animation.stop()
 	info_text.text = text
 	info_text.label_settings.font_color = color
 	info_text.show()
 
 
 func hide_info():
-	info_text_animation.play("RESET")
+	info_text_animation.stop()
 	info_text.hide()
 
 
