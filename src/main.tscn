@@ -1,4 +1,4 @@
-[gd_scene load_steps=10 format=3 uid="uid://busmmqyj42lv5"]
+[gd_scene load_steps=14 format=3 uid="uid://busmmqyj42lv5"]
 
 [ext_resource type="FontFile" uid="uid://b7jasa607pvfx" path="res://fonts/Louis George Cafe Bold.ttf" id="1"]
 [ext_resource type="Script" path="res://src/main.gd" id="2"]
@@ -96,6 +96,63 @@ cache/0/36/0/underline_thickness = 0.0
 cache/0/36/0/scale = 1.0
 cache/0/36/0/kerning_overrides/16/0 = Vector2(0, 0)
 cache/0/36/0/kerning_overrides/36/0 = Vector2(0, 0)
+
+[sub_resource type="FontFile" id="FontFile_6m14o"]
+fallbacks = Array[Font]([ExtResource("1")])
+subpixel_positioning = 0
+msdf_pixel_range = 14
+msdf_size = 128
+cache/0/16/0/ascent = 0.0
+cache/0/16/0/descent = 0.0
+cache/0/16/0/underline_position = 0.0
+cache/0/16/0/underline_thickness = 0.0
+cache/0/16/0/scale = 1.0
+cache/0/16/0/kerning_overrides/16/0 = Vector2(0, 0)
+cache/0/16/0/kerning_overrides/24/0 = Vector2(0, 0)
+cache/0/24/0/ascent = 0.0
+cache/0/24/0/descent = 0.0
+cache/0/24/0/underline_position = 0.0
+cache/0/24/0/underline_thickness = 0.0
+cache/0/24/0/scale = 1.0
+cache/0/24/0/kerning_overrides/16/0 = Vector2(0, 0)
+cache/0/24/0/kerning_overrides/24/0 = Vector2(0, 0)
+
+[sub_resource type="LabelSettings" id="LabelSettings_vxdpn"]
+font_size = 24
+font_color = Color(0.968627, 1, 0, 1)
+
+[sub_resource type="Animation" id="Animation_xl3cv"]
+resource_name = "Copied"
+length = 4.0
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("CopiedText:modulate")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3, 3, 4),
+"transitions": PackedFloat32Array(1, 1, 1, 1),
+"update": 0,
+"values": [Color(1, 1, 1, 0), Color(1, 1, 1, 1), Color(1, 1, 1, 1), Color(1, 1, 1, 0)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("CopiedText:position")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0, 0.3, 4),
+"transitions": PackedFloat32Array(1, 1, 1),
+"update": 0,
+"values": [Vector2(126, 31), Vector2(126, 51), Vector2(126, 51)]
+}
+
+[sub_resource type="AnimationLibrary" id="AnimationLibrary_sgitb"]
+_data = {
+"Copied": SubResource("Animation_xl3cv")
+}
 
 [node name="Main" type="Control"]
 layout_mode = 3
@@ -344,6 +401,32 @@ focus_mode = 0
 theme_override_fonts/font = SubResource("5")
 text = "Guess"
 
+[node name="ShareButton" type="Button" parent="C/V/KeyboardVBox/GuessButton"]
+unique_name_in_owner = true
+offset_left = 180.0
+offset_right = 283.0
+offset_bottom = 49.0
+focus_mode = 0
+text = "Share"
+
+[node name="CopiedText" type="Label" parent="C/V/KeyboardVBox/GuessButton"]
+modulate = Color(1, 1, 1, 0)
+offset_left = 126.0
+offset_top = 31.0
+offset_right = 347.0
+offset_bottom = 59.0
+theme_override_colors/font_color = Color(1, 0.309804, 0.309804, 1)
+theme_override_fonts/font = SubResource("FontFile_6m14o")
+text = "Copied to clipboard!"
+label_settings = SubResource("LabelSettings_vxdpn")
+horizontal_alignment = 1
+
+[node name="CopiedTextAnimation" type="AnimationPlayer" parent="C/V/KeyboardVBox/GuessButton"]
+unique_name_in_owner = true
+libraries = {
+"": SubResource("AnimationLibrary_sgitb")
+}
+
 [node name="MenuButton" type="Button" parent="."]
 layout_mode = 1
 anchors_preset = 1
@@ -359,4 +442,5 @@ text = "Menu"
 
 [connection signal="pressed" from="C/V/KeyboardVBox/HRow3/ButtonBksp" to="." method="_on_ButtonBksp_pressed"]
 [connection signal="pressed" from="C/V/KeyboardVBox/GuessButton" to="." method="_on_GuessButton_pressed"]
+[connection signal="pressed" from="C/V/KeyboardVBox/GuessButton/ShareButton" to="." method="_on_share_button_pressed"]
 [connection signal="pressed" from="MenuButton" to="." method="_on_MenuButton_pressed"]

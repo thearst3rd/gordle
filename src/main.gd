@@ -17,6 +17,7 @@ var keyboard_buttons := {}
 var target_word: String
 var current_guess: int
 var ended: bool
+var won: bool
 var input_guess: String
 
 @onready var title: Label = %Title
@@ -26,8 +27,10 @@ var input_guess: String
 @onready var keyboard_vbox: VBoxContainer = %KeyboardVBox
 @onready var guess_button: Button = %GuessButton
 @onready var backspace_button: Button = %ButtonBksp
+@onready var share_button: Button = %ShareButton
 
 @onready var info_text_animation: AnimationPlayer = %InfoTextAnimation
+@onready var copied_text_animation: AnimationPlayer = %CopiedTextAnimation
 
 @onready var error_text_color_default := info_text.label_settings.font_color
 
@@ -57,6 +60,7 @@ func _ready() -> void:
 	target_word = Global.generate_word(letter_count, random_seed)
 	current_guess = 0
 	ended = false
+	won = false
 
 	for i in range(0, 26):
 		var letter := char("A".unicode_at(0) + i)
@@ -64,6 +68,8 @@ func _ready() -> void:
 		keyboard_buttons[letter] = keyboard_button
 		var error := keyboard_button.connect("pressed", Callable(self, "type_letter").bind(letter))
 		assert(not error)
+
+	share_button.hide()
 
 
 func type_letter(letter: String) -> void:
@@ -161,13 +167,12 @@ func guess_entered() -> void:
 
 	current_guess += 1
 
-	var won := false
-
 	if input_guess == target_word:
 		ended = true
 		won = true
 	elif current_guess >= guess_count:
 		ended = true
+		won = false
 
 	input_guess = ""
 
@@ -180,6 +185,7 @@ func guess_entered() -> void:
 			show_info("Congrats! You won!", Color(0.4, 0.9, 0.6))
 		else:
 			show_info("Game Over. The word was %s" % target_word, error_text_color_default)
+		share_button.show()
 
 
 func show_error(text: String):
@@ -210,3 +216,30 @@ func _on_MenuButton_pressed() -> void:
 
 func _on_ButtonBksp_pressed() -> void:
 	backspace()
+
+
+func _on_share_button_pressed() -> void:
+	var text := title.text
+	if won:
+		text += " %d/%d\n\n" % [current_guess, guess_count]
+	elif ended:
+		text += " X/%d\n\n" % [guess_count]
+	else:
+		# Can probably bail early but I might as allow it
+		text += " ?/%d\n\n" % [guess_count]
+
+	for i in range(current_guess):
+		for j in range(letter_count):
+			var letter_instance := letters[i][j] as ColorRect
+			if letter_instance.color.is_equal_approx(color_correct):
+				text += "🟩"
+			elif letter_instance.color.is_equal_approx(color_misplaced):
+				text += "🟨"
+			else:
+				text += "⬛"
+		text += "\n"
+
+	text += "\nhttps://thearst3rd.com/games/gordle"
+	DisplayServer.clipboard_set(text)
+	copied_text_animation.stop()
+	copied_text_animation.play("Copied")
