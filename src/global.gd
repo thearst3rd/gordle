@@ -12,6 +12,8 @@ const MAX_LENGTH := 5
 const GENERABLE_WORDS_FILENAME = "res://words/popular-filtered.txt"
 const ALL_WORDS_FILENAME := "res://words/enable1.txt"
 
+var date_regex = RegEx.create_from_string("^[0-9]+-[0-9]+-[0-9]+$")
+
 var game_mode := GameMode.DAILY
 var custom_word := ""
 var custom_date_str := ""
@@ -137,22 +139,26 @@ func parse_custom(value: String) -> bool:
 			custom_word = decoded
 			return true
 
-	var parsed_date := Time.get_datetime_dict_from_datetime_string(value, false)
-	if parsed_date.has("year"):
+	if date_regex.search(value):
+		var parsed_date := Time.get_datetime_dict_from_datetime_string(value, false)
 		parsed_date["hour"] = 0
 		parsed_date["minute"] = 0
 		parsed_date["second"] = 0
 		var new_time := Time.get_unix_time_from_datetime_dict(parsed_date)
-		var valid := true
-		if not allow_future:
-			var current_time := Time.get_unix_time_from_datetime_string(Time.get_date_string_from_system(true))
-			if new_time > current_time:
-				valid = false
+		var valid := false
+		if new_time != 0 or (parsed_date["year"] == 1970 and parsed_date["month"] == 1 and parsed_date["day"] == 1):
+			valid = true
+			if not allow_future:
+				var current_time := Time.get_unix_time_from_datetime_string(Time.get_date_string_from_system(true))
+				if new_time > current_time:
+					valid = false
 		if valid:
 			custom_word = generate_word(5, new_time)
 			custom_date_str = Time.get_date_string_from_unix_time(new_time)
 			return true
 
+	custom_word = ""
+	custom_date_str = ""
 	return false
 
 
