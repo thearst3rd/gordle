@@ -134,7 +134,7 @@ func guess_entered() -> void:
 	if input_guess.length() != letter_count:
 		show_error("Word must be five characters.")
 		return
-	if not Global.is_valid_word(input_guess):
+	if not Global.is_valid_word(input_guess) and input_guess != target_word:
 		show_error("Not a recognized word.")
 		return
 

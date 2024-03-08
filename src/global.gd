@@ -96,10 +96,6 @@ func detect_params() -> void:
 		if "--allowfuture" in args:
 			allow_future = true
 
-	print("daily: ", daily)
-	print("custom: ", custom)
-	print("allowfuture: ", allow_future)
-
 	if daily:
 		game_mode = GameMode.DAILY
 		get_tree().change_scene_to_file.call_deferred("res://src/main.tscn")
