@@ -11,13 +11,13 @@ func _ready() -> void:
 
 
 func _on_DailyButton_pressed() -> void:
-	Global.daily_mode = true
+	Global.game_mode = Global.GameMode.DAILY
 	var error := get_tree().change_scene_to_file("res://src/main.tscn")
 	assert(not error)
 
 
 func _on_RandomButton_pressed() -> void:
-	Global.daily_mode = false
+	Global.game_mode = Global.GameMode.RANDOM
 	var error := get_tree().change_scene_to_file("res://src/main.tscn")
 	assert(not error)
 

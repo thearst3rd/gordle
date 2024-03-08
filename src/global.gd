@@ -1,23 +1,33 @@
 extends Node
 
 
+enum GameMode {
+	DAILY,
+	RANDOM,
+	CUSTOM,
+}
+
 const MIN_LENGTH := 5
 const MAX_LENGTH := 5
 const GENERABLE_WORDS_FILENAME = "res://words/popular-filtered.txt"
 const ALL_WORDS_FILENAME := "res://words/enable1.txt"
 
-
-var daily_mode := true
-
+var game_mode := GameMode.DAILY
+var custom_word := ""
+var custom_date_str := ""
 
 var generable_words: Dictionary
 var all_words: Dictionary
+
+var allow_future := false
 
 
 func _ready() -> void:
 	randomize()
 	generable_words = parse_words(GENERABLE_WORDS_FILENAME, MIN_LENGTH, MAX_LENGTH)
 	all_words = parse_words(ALL_WORDS_FILENAME, MIN_LENGTH, MAX_LENGTH)
+
+	detect_params()
 
 
 func parse_words(filename: String, min_len: int, max_len: int) -> Dictionary:
@@ -60,6 +70,94 @@ func is_valid_word(word: String) -> bool:
 	var words_list := all_words[length] as Array
 
 	return word.to_upper() in words_list
+
+
+## Checks for command line/URL parameters and configures the game accordingly
+func detect_params() -> void:
+	var daily := false
+	var custom := ""
+
+	if OS.has_feature("web"):
+		var paramsStr = JavaScriptBridge.eval("window.location.search")
+		var paramsObj = JavaScriptBridge.create_object("URLSearchParams", paramsStr)
+		if paramsObj.has("daily") and paramsObj.get("daily") not in ["false", "0"]:
+			daily = true
+		if paramsObj.has("custom"):
+			custom = paramsObj.get("custom")
+		if paramsObj.has("allowfuture") and paramsObj.get("allowfuture") not in ["false", "0"]:
+			allow_future = true
+	else:
+		var args := OS.get_cmdline_user_args()
+		if "--daily" in args:
+			daily = true
+		var custom_index := args.find("--custom")
+		if custom_index != -1 and custom_index < (args.size() - 1):
+			custom = args[custom_index + 1]
+		if "--allowfuture" in args:
+			allow_future = true
+
+	print("daily: ", daily)
+	print("custom: ", custom)
+	print("allowfuture: ", allow_future)
+
+	if daily:
+		game_mode = GameMode.DAILY
+		get_tree().change_scene_to_file.call_deferred("res://src/main.tscn")
+		return
+
+	if custom:
+		if parse_custom(custom):
+			game_mode = GameMode.CUSTOM
+			get_tree().change_scene_to_file.call_deferred("res://src/main.tscn")
+			return
+
+
+## Checks if the given string is:
+##
+## * A normal five letter word, or
+## * A valid encoded word, or
+## * A valid date in YYYY-MM-DD encoding
+##     * Will only allow this date to be in the present or past, unless `allow_future` is set to true
+##
+## Returns true if successful, and will set `custom_word` and possibly `custom_date_str` values accordingly. Returns
+## false if unsuccessful and will erase `custom_word` and `custom_date_str`.
+func parse_custom(value: String) -> bool:
+	if value.length() == 5:
+		# ...is there an is_alpha function that I missed?
+		var word := value.to_upper()
+		var valid := true
+		for i in range(5):
+			var code := word.unicode_at(i)
+			if code < 65 or code > 90: # 65 = ascii "A", 90 = ascii "Z"
+				valid = false
+				break
+		if valid:
+			custom_word = word
+			return true
+
+	if value.is_valid_hex_number():
+		var decoded := decode_word(value.hex_to_int())
+		if not decoded.is_empty():
+			custom_word = decoded
+			return true
+
+	var parsed_date := Time.get_datetime_dict_from_datetime_string(value, false)
+	if parsed_date.has("year"):
+		parsed_date["hour"] = 0
+		parsed_date["minute"] = 0
+		parsed_date["second"] = 0
+		var new_time := Time.get_unix_time_from_datetime_dict(parsed_date)
+		var valid := true
+		if not allow_future:
+			var current_time := Time.get_unix_time_from_datetime_string(Time.get_date_string_from_system(true))
+			if new_time > current_time:
+				valid = false
+		if valid:
+			custom_word = generate_word(5, new_time)
+			custom_date_str = Time.get_date_string_from_unix_time(new_time)
+			return true
+
+	return false
 
 
 func _notification(what: int) -> void:
@@ -119,7 +217,7 @@ func decode_word(encoded_word: int) -> String:
 
 	num -= 123456
 
-	if num < 0 or num >= (26 ** 5): # (26 ** 5) - 1 = "zzzzz"
+	if num < 0 or num >= (26 ** 5): # (26 ** 5) - 1 = "ZZZZZ"
 		# Someone is trying to be sneaky! Or more likely I just messed up.
 		return ""
 

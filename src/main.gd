@@ -46,26 +46,38 @@ func _ready() -> void:
 			letter_grid.add_child(letter)
 		letters.append(letter_array)
 
-	var random_seed = null
-	if Global.daily_mode:
-		var current_time := Time.get_datetime_dict_from_system(true)
-		current_time["hour"] = 0
-		current_time["minute"] = 0
-		current_time["second"] = 0
-		random_seed = Time.get_unix_time_from_datetime_dict(current_time)
 
-		title.text = "Daily " + title.text
-		subtitle.text = "%d-%02d-%02d" % [current_time["year"], current_time["month"], current_time["day"]]
+	if Global.game_mode != Global.GameMode.CUSTOM:
+		Global.custom_word = ""
+		Global.custom_date_str = ""
+
+	if not Global.custom_word.is_empty():
+		target_word = Global.custom_word
+		title.text = "Custom " + title.text
+
+		if Global.custom_date_str:
+			subtitle.text = Global.custom_date_str
+		else:
+			subtitle.text = String.num_int64(Global.encode_word(target_word), 16)
 	else:
-		title.text = "Random " + title.text
+		var random_seed = null
+		if Global.game_mode == Global.GameMode.DAILY:
+			var current_time := Time.get_date_string_from_system(true)
+			random_seed = Time.get_unix_time_from_datetime_string(current_time)
 
-	target_word = Global.generate_word(letter_count, random_seed)
+			title.text = "Daily " + title.text
+			subtitle.text = current_time
+		elif Global.game_mode == Global.GameMode.RANDOM:
+			title.text = "Random " + title.text
+
+		target_word = Global.generate_word(letter_count, random_seed)
+
+		if Global.game_mode != Global.GameMode.DAILY:
+			subtitle.text = String.num_int64(Global.encode_word(target_word), 16)
+
 	current_guess = 0
 	ended = false
 	won = false
-
-	if not Global.daily_mode:
-		subtitle.text = String.num_int64(Global.encode_word(target_word), 16)
 
 	for i in range(0, 26):
 		var letter := char("A".unicode_at(0) + i)
