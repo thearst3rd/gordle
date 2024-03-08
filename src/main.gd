@@ -21,6 +21,7 @@ var won: bool
 var input_guess: String
 
 @onready var title: Label = %Title
+@onready var subtitle: Label = %Subtitle
 @onready var letter_grid: GridContainer = %LetterGrid
 @onready var info_text: Label = %InfoText
 
@@ -54,6 +55,7 @@ func _ready() -> void:
 		random_seed = Time.get_unix_time_from_datetime_dict(current_time)
 
 		title.text = "Daily " + title.text
+		subtitle.text = "%d-%02d-%02d" % [current_time["year"], current_time["month"], current_time["day"]]
 	else:
 		title.text = "Random " + title.text
 
@@ -61,6 +63,9 @@ func _ready() -> void:
 	current_guess = 0
 	ended = false
 	won = false
+
+	if not Global.daily_mode:
+		subtitle.text = String.num_int64(Global.encode_word(target_word), 16)
 
 	for i in range(0, 26):
 		var letter := char("A".unicode_at(0) + i)
@@ -219,14 +224,14 @@ func _on_ButtonBksp_pressed() -> void:
 
 
 func _on_share_button_pressed() -> void:
-	var text := title.text
+	var text := "%s %s\n" % [title.text, subtitle.text]
 	if won:
-		text += " %d/%d\n\n" % [current_guess, guess_count]
+		text += "%d/%d\n\n" % [current_guess, guess_count]
 	elif ended:
-		text += " X/%d\n\n" % [guess_count]
+		text += "X/%d\n\n" % [guess_count]
 	else:
 		# Can probably bail early but I might as allow it
-		text += " ?/%d\n\n" % [guess_count]
+		text += "?/%d\n\n" % [guess_count]
 
 	for i in range(current_guess):
 		for j in range(letter_count):

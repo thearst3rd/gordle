@@ -175,12 +175,22 @@ anchor_bottom = 1.0
 layout_mode = 2
 theme_override_constants/separation = 20
 
-[node name="Title" type="Label" parent="C/V"]
+[node name="Header" type="VBoxContainer" parent="C/V"]
+layout_mode = 2
+theme_override_constants/separation = 0
+
+[node name="Title" type="Label" parent="C/V/Header"]
 unique_name_in_owner = true
 layout_mode = 2
 theme_override_fonts/font = SubResource("1")
 text = "Gordle"
 label_settings = SubResource("LabelSettings_h2dux")
+horizontal_alignment = 1
+
+[node name="Subtitle" type="Label" parent="C/V/Header"]
+unique_name_in_owner = true
+layout_mode = 2
+text = "Subtitle"
 horizontal_alignment = 1
 
 [node name="LetterGrid" type="GridContainer" parent="C/V"]
@@ -403,6 +413,7 @@ text = "Guess"
 
 [node name="ShareButton" type="Button" parent="C/V/KeyboardVBox/GuessButton"]
 unique_name_in_owner = true
+layout_mode = 0
 offset_left = 180.0
 offset_right = 283.0
 offset_bottom = 49.0
@@ -411,6 +422,7 @@ text = "Share"
 
 [node name="CopiedText" type="Label" parent="C/V/KeyboardVBox/GuessButton"]
 modulate = Color(1, 1, 1, 0)
+layout_mode = 0
 offset_left = 126.0
 offset_top = 31.0
 offset_right = 347.0
