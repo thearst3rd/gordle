@@ -124,6 +124,21 @@ text = "Different every time"
 label_settings = SubResource("LabelSettings_cdviw")
 horizontal_alignment = 1
 
+[node name="V3" type="VBoxContainer" parent="C/V/V2"]
+custom_minimum_size = Vector2(310, 0)
+layout_mode = 2
+
+[node name="CustomButton" type="Button" parent="C/V/V2/V3"]
+layout_mode = 2
+text = "Custom Gordle"
+
+[node name="Label" type="Label" parent="C/V/V2/V3"]
+layout_mode = 2
+theme_override_fonts/font = SubResource("2")
+text = "Choose your own word"
+label_settings = SubResource("LabelSettings_cdviw")
+horizontal_alignment = 1
+
 [node name="CreditsButton" type="Button" parent="C/V/V2"]
 layout_mode = 2
 text = "Licenses"
@@ -243,6 +258,7 @@ text = "Back"
 
 [connection signal="pressed" from="C/V/V2/V/DailyButton" to="." method="_on_DailyButton_pressed"]
 [connection signal="pressed" from="C/V/V2/V2/RandomButton" to="." method="_on_RandomButton_pressed"]
+[connection signal="pressed" from="C/V/V2/V3/CustomButton" to="." method="_on_custom_button_pressed"]
 [connection signal="pressed" from="C/V/V2/CreditsButton" to="." method="_on_CreditsButton_pressed"]
 [connection signal="pressed" from="C/V/V2/QuitButton" to="." method="_on_QuitButton_pressed"]
 [connection signal="pressed" from="Credits/M/V/CreditsBackButton" to="." method="_on_CreditsBackButton_pressed"]

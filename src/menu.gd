@@ -22,6 +22,11 @@ func _on_RandomButton_pressed() -> void:
 	assert(not error)
 
 
+func _on_custom_button_pressed() -> void:
+	var error := get_tree().change_scene_to_file("res://src/custom_setup.tscn")
+	assert(not error)
+
+
 func _on_CreditsButton_pressed() -> void:
 	credits.show()
 
