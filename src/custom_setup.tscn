@@ -143,7 +143,7 @@ horizontal_alignment = 1
 [node name="CodeLabel" type="Label" parent="C/V/Help/Options"]
 layout_mode = 2
 text = "An encoded word beginning with \"5$\",
-e.g. \"a00d57a\""
+e.g. \"5$BTEo\""
 label_settings = SubResource("LabelSettings_6at68")
 horizontal_alignment = 1
 
