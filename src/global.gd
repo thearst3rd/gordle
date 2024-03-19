@@ -133,11 +133,10 @@ func parse_custom(value: String) -> bool:
 			custom_word = word
 			return true
 
-	if value.is_valid_hex_number():
-		var decoded := decode_word(value.hex_to_int())
-		if not decoded.is_empty():
-			custom_word = decoded
-			return true
+	var decoded := decode_word(value)
+	if not decoded.is_empty():
+		custom_word = decoded
+		return true
 
 	if date_regex.search(value):
 		var parsed_date := Time.get_datetime_dict_from_datetime_string(value, false)
@@ -177,10 +176,10 @@ func popcnt(num: int) -> int:
 	return count
 
 
-## Encodes a word using a very basic "encryption" method. Returns -1 if invalid word
-func encode_word(word: String) -> int:
+## Encodes a word using a very basic "encryption" method. Returns an empty string if invalid word
+func encode_word(word: String) -> String:
 	if word.length() != 5:
-		return -1
+		return ""
 	word = word.to_upper()
 
 	# Encode word in base 26
@@ -188,7 +187,7 @@ func encode_word(word: String) -> int:
 	for i in range(word.length()):
 		var letter_ind := word[i].unicode_at(0) - 65 # 65 = ascii "A"
 		if letter_ind < 0 or letter_ind >= 26:
-			return -1
+			return ""
 		num += letter_ind * (26 ** i)
 	# Add an offset so that "aaaaa" isn't just zeroes
 	num += 123456
@@ -201,13 +200,17 @@ func encode_word(word: String) -> int:
 	var bits := popcnt(num)
 	num = num | (bits << 24)
 
-	return num
+	return String.num_int64(num, 16)
 
 
 ## Decodes an encoded word. Returns an empty string if invalid
-func decode_word(encoded_word: int) -> String:
-	var bits := encoded_word >> 24
-	var num := encoded_word & 0xffffff
+func decode_word(encoded_word: String) -> String:
+	if not encoded_word.is_valid_hex_number():
+		return ""
+	var encoded_word_num := encoded_word.hex_to_int()
+
+	var bits := encoded_word_num >> 24
+	var num := encoded_word_num & 0xffffff
 
 	# Verify bit count
 	if popcnt(num) != bits:

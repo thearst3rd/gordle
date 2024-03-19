@@ -58,7 +58,7 @@ func _ready() -> void:
 		if Global.custom_date_str:
 			subtitle.text = Global.custom_date_str
 		else:
-			subtitle.text = String.num_int64(Global.encode_word(target_word), 16)
+			subtitle.text = Global.encode_word(target_word)
 	else:
 		var random_seed = null
 		if Global.game_mode == Global.GameMode.DAILY:
@@ -73,7 +73,7 @@ func _ready() -> void:
 		target_word = Global.generate_word(letter_count, random_seed)
 
 		if Global.game_mode != Global.GameMode.DAILY:
-			subtitle.text = String.num_int64(Global.encode_word(target_word), 16)
+			subtitle.text = Global.encode_word(target_word)
 
 	current_guess = 0
 	ended = false
