@@ -120,6 +120,9 @@ func detect_params() -> void:
 ## Returns true if successful, and will set `custom_word` and possibly `custom_date_str` values accordingly. Returns
 ## false if unsuccessful and will erase `custom_word` and `custom_date_str`.
 func parse_custom(value: String) -> bool:
+	custom_word = ""
+	custom_date_str = ""
+
 	if value.length() == 5:
 		# ...is there an is_alpha function that I missed?
 		var word := value.to_upper()
@@ -156,8 +159,6 @@ func parse_custom(value: String) -> bool:
 			custom_date_str = Time.get_date_string_from_unix_time(new_time)
 			return true
 
-	custom_word = ""
-	custom_date_str = ""
 	return false
 
 
