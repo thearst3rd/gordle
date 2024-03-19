@@ -12,6 +12,11 @@ const MAX_LENGTH := 5
 const GENERABLE_WORDS_FILENAME = "res://words/popular-filtered.txt"
 const ALL_WORDS_FILENAME := "res://words/enable1.txt"
 
+# !$'()*+,-.0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ_abcdefghijklmnopqrstuvwxyz     <- All URL-encodable characters
+const LARGE_BASE_CHARS := "!'()*+,-.123456789ABCDEFGHJKLMNPQRSTUVWXYZ_abcdefghijkmnopqrstuvwxyz" # <- Without some similar looking characters
+const LARGE_BASE := 68 # Number of characters in above array
+const ENCODING_INDICATOR := "$"
+
 var date_regex = RegEx.create_from_string("^[0-9]+-[0-9]+-[0-9]+$")
 
 var game_mode := GameMode.DAILY
@@ -137,7 +142,7 @@ func parse_custom(value: String) -> bool:
 			return true
 
 	var decoded := decode_word(value)
-	if not decoded.is_empty():
+	if not decoded.is_empty() and decoded.length() == 5:
 		custom_word = decoded
 		return true
 
@@ -179,8 +184,6 @@ func popcnt(num: int) -> int:
 
 ## Encodes a word using a very basic "encryption" method. Returns an empty string if invalid word
 func encode_word(word: String) -> String:
-	if word.length() != 5:
-		return ""
 	word = word.to_upper()
 
 	# Encode word in base 26
@@ -193,46 +196,69 @@ func encode_word(word: String) -> String:
 	# Add an offset so that "aaaaa" isn't just zeroes
 	num += 123456
 
-	# Shuffle bits around
-	# uvwxyz -> vuxwzy -> zyvuxw
-	num = ((num & 0xf0f0f0) >> 4) | ((num & 0x0f0f0f) << 4)
-	num = ((num & 0xffff00) >> 8) | ((num & 0x0000ff) << 16)
-	# Count bits and add as checksum
-	var bits := popcnt(num)
-	num = num | (bits << 24)
-
-	return String.num_int64(num, 16)
+	return str(word.length()) + ENCODING_INDICATOR + large_encode(num)
 
 
 ## Decodes an encoded word. Returns an empty string if invalid
 func decode_word(encoded_word: String) -> String:
-	if not encoded_word.is_valid_hex_number():
+	var index := encoded_word.find(ENCODING_INDICATOR)
+	if index < 1:
 		return ""
-	var encoded_word_num := encoded_word.hex_to_int()
-
-	var bits := encoded_word_num >> 24
-	var num := encoded_word_num & 0xffffff
-
-	# Verify bit count
-	if popcnt(num) != bits:
+	var len_str := encoded_word.substr(0, index)
+	if not len_str.is_valid_int():
+		return ""
+	var word_len := len_str.to_int()
+	if word_len < 1:
 		return ""
 
-	# Unshuffle bits
-	num = ((num << 8) & 0xffff00) | ((num >> 16) & 0x0000ff)
-	num = ((num << 4) & 0xf0f0f0) | ((num >> 4) & 0x0f0f0f)
+	var large_base_str := encoded_word.substr(index + 1)
+	var num := large_decode(large_base_str)
+	if num < 0:
+		return ""
 
 	num -= 123456
 
-	if num < 0 or num >= (26 ** 5): # (26 ** 5) - 1 = "ZZZZZ"
+	if num < 0 or num >= (26 ** word_len): # (26 ** 5) - 1 = "ZZZZZ"
 		# Someone is trying to be sneaky! Or more likely I just messed up.
 		return ""
 
 	# Decode base 26 word
 	var word := ""
-	for i in range(5):
+	for i in range(word_len):
 		var letter_ind := num % 26
 		word += char(letter_ind + 65) # 65 = ascii "A"
 		@warning_ignore("integer_division")
 		num = num / 26
 
 	return word
+
+
+## Encodes an integer as a large-base string
+func large_encode(num: int) -> String:
+	if num <= 0: # Negative numbers not supported since they are not needed
+		return LARGE_BASE_CHARS[0]
+	var lint := ""
+	while num > 0:
+		lint = LARGE_BASE_CHARS[num % LARGE_BASE] + lint
+		@warning_ignore("integer_division")
+		num = num / LARGE_BASE
+	return lint
+
+
+## Checks if the given string is a valid large-base integer. (Sorta, it only checks if the character composition is good)
+func is_valid_large_base_int(lint: String) -> bool:
+	for chr in lint:
+		if chr not in LARGE_BASE_CHARS:
+			return false
+	return true
+
+
+## Converts the given large-base integer back into a normal int. Returns -1 if invalid
+func large_decode(lint: String) -> int:
+	var num := 0
+	for chr in lint:
+		var index := LARGE_BASE_CHARS.find(chr)
+		if index < 0:
+			return -1
+		num = (num * LARGE_BASE) + index
+	return num

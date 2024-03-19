@@ -142,14 +142,15 @@ horizontal_alignment = 1
 
 [node name="CodeLabel" type="Label" parent="C/V/Help/Options"]
 layout_mode = 2
-text = "An encoded word, e.g. \"a00d57a\""
+text = "An encoded word beginning with \"5$\",
+e.g. \"a00d57a\""
 label_settings = SubResource("LabelSettings_6at68")
 horizontal_alignment = 1
 
 [node name="DateLabel" type="Label" parent="C/V/Help/Options"]
 layout_mode = 2
-text = "A date in YYYY-MM-DD format, e.g.
-\"2024-01-23\""
+text = "A date in YYYY-MM-DD format,
+e.g. \"2024-01-23\""
 label_settings = SubResource("LabelSettings_6at68")
 horizontal_alignment = 1
 
