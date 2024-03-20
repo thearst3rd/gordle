@@ -12,7 +12,7 @@ const Letter := preload("res://src/letter.tscn")
 # An array of arrays of the letter nodes
 var letters := []
 var keyboard_buttons := {}
-var letter_count := 5
+var letter_count := Global.DEFAULT_WORD_LENGTH
 
 var target_word: String
 var current_guess: int
@@ -60,6 +60,8 @@ func _ready() -> void:
 		elif Global.game_mode == Global.GameMode.RANDOM:
 			title.text = "Random " + title.text
 
+		if Global.custom_word_length > 0:
+			letter_count = Global.custom_word_length
 		target_word = Global.generate_word(letter_count, random_seed)
 
 		if Global.game_mode != Global.GameMode.DAILY:

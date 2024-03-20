@@ -92,20 +92,22 @@ horizontal_alignment = 1
 
 [node name="V2" type="VBoxContainer" parent="C/V"]
 layout_mode = 2
+size_flags_horizontal = 4
 theme_override_constants/separation = 30
 
 [node name="V" type="VBoxContainer" parent="C/V/V2"]
 layout_mode = 2
 
 [node name="DailyButton" type="Button" parent="C/V/V2/V"]
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Daily Gordle"
 
 [node name="Label" type="Label" parent="C/V/V2/V"]
 layout_mode = 2
 theme_override_fonts/font = SubResource("2")
-text = "Changes every day
-at midnight GMT"
+text = "Changes at midnight UTC"
 label_settings = SubResource("LabelSettings_17upj")
 horizontal_alignment = 1
 
@@ -114,8 +116,48 @@ custom_minimum_size = Vector2(310, 0)
 layout_mode = 2
 
 [node name="RandomButton" type="Button" parent="C/V/V2/V2"]
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Random Gordle"
+
+[node name="H2" type="HBoxContainer" parent="C/V/V2/V2"]
+layout_mode = 2
+alignment = 1
+
+[node name="Random3" type="Button" parent="C/V/V2/V2/H2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "3dle"
+
+[node name="Random4" type="Button" parent="C/V/V2/V2/H2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "4dle"
+
+[node name="Spacer" type="Control" parent="C/V/V2/V2/H2"]
+custom_minimum_size = Vector2(20, 0)
+layout_mode = 2
+
+[node name="Random6" type="Button" parent="C/V/V2/V2/H2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "6dle"
+
+[node name="Random7" type="Button" parent="C/V/V2/V2/H2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "7dle"
+
+[node name="Random8" type="Button" parent="C/V/V2/V2/H2"]
+unique_name_in_owner = true
+layout_mode = 2
+theme_override_font_sizes/font_size = 24
+text = "8dle"
 
 [node name="Label" type="Label" parent="C/V/V2/V2"]
 layout_mode = 2
@@ -129,7 +171,9 @@ custom_minimum_size = Vector2(310, 0)
 layout_mode = 2
 
 [node name="CustomButton" type="Button" parent="C/V/V2/V3"]
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Custom Gordle"
 
 [node name="Label" type="Label" parent="C/V/V2/V3"]
@@ -140,12 +184,16 @@ label_settings = SubResource("LabelSettings_cdviw")
 horizontal_alignment = 1
 
 [node name="CreditsButton" type="Button" parent="C/V/V2"]
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Licenses"
 
 [node name="QuitButton" type="Button" parent="C/V/V2"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(280, 0)
 layout_mode = 2
+size_flags_horizontal = 4
 text = "Quit"
 
 [node name="Credits" type="ColorRect" parent="."]

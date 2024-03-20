@@ -9,6 +9,7 @@ enum GameMode {
 
 const MIN_WORD_LENGTH := 3
 const MAX_WORD_LENGTH := 8
+const DEFAULT_WORD_LENGTH := 5
 const GENERABLE_WORDS_FILENAME = "res://words/popular-filtered.txt"
 const ALL_WORDS_FILENAME := "res://words/enable1.txt"
 
@@ -22,6 +23,7 @@ var date_regex = RegEx.create_from_string("^[0-9]+-[0-9]+-[0-9]+$")
 var game_mode := GameMode.DAILY
 var custom_word := ""
 var custom_date_str := ""
+var custom_word_length := -1
 
 var generable_words: Dictionary
 var all_words: Dictionary
@@ -162,7 +164,7 @@ func parse_custom(value: String) -> bool:
 				if new_time > current_time:
 					valid = false
 		if valid:
-			custom_word = generate_word(5, new_time)
+			custom_word = generate_word(DEFAULT_WORD_LENGTH, new_time)
 			custom_date_str = Time.get_date_string_from_unix_time(new_time)
 			return true
 
