@@ -7,8 +7,8 @@ enum GameMode {
 	CUSTOM,
 }
 
-const MIN_LENGTH := 5
-const MAX_LENGTH := 5
+const MIN_WORD_LENGTH := 3
+const MAX_WORD_LENGTH := 8
 const GENERABLE_WORDS_FILENAME = "res://words/popular-filtered.txt"
 const ALL_WORDS_FILENAME := "res://words/enable1.txt"
 
@@ -31,8 +31,8 @@ var allow_future := false
 
 func _ready() -> void:
 	randomize()
-	generable_words = parse_words(GENERABLE_WORDS_FILENAME, MIN_LENGTH, MAX_LENGTH)
-	all_words = parse_words(ALL_WORDS_FILENAME, MIN_LENGTH, MAX_LENGTH)
+	generable_words = parse_words(GENERABLE_WORDS_FILENAME, MIN_WORD_LENGTH, MAX_WORD_LENGTH)
+	all_words = parse_words(ALL_WORDS_FILENAME, MIN_WORD_LENGTH, MAX_WORD_LENGTH)
 
 	detect_params()
 
@@ -71,7 +71,7 @@ func generate_word(length: int, random_seed = null) -> String:
 
 func is_valid_word(word: String) -> bool:
 	var length := word.length()
-	if length < MIN_LENGTH or length > MAX_LENGTH:
+	if length < MIN_WORD_LENGTH or length > MAX_WORD_LENGTH:
 		return false
 
 	var words_list := all_words[length] as Array
@@ -117,8 +117,8 @@ func detect_params() -> void:
 
 ## Checks if the given string is:
 ##
-## * A normal five letter word, or
 ## * A valid encoded word, or
+## * A normal alphabetical word, or
 ## * A valid date in YYYY-MM-DD encoding
 ##     * Will only allow this date to be in the present or past, unless `allow_future` is set to true
 ##
@@ -128,11 +128,18 @@ func parse_custom(value: String) -> bool:
 	custom_word = ""
 	custom_date_str = ""
 
-	if value.length() == 5:
+	var decoded := decode_word(value)
+	var decoded_len := decoded.length()
+	if decoded_len >= MIN_WORD_LENGTH and decoded_len <= MAX_WORD_LENGTH:
+		custom_word = decoded
+		return true
+
+	var value_len := value.length()
+	if value_len >= MIN_WORD_LENGTH and value_len <= MAX_WORD_LENGTH:
 		# ...is there an is_alpha function that I missed?
 		var word := value.to_upper()
 		var valid := true
-		for i in range(5):
+		for i in range(value_len):
 			var code := word.unicode_at(i)
 			if code < 65 or code > 90: # 65 = ascii "A", 90 = ascii "Z"
 				valid = false
@@ -140,11 +147,6 @@ func parse_custom(value: String) -> bool:
 		if valid:
 			custom_word = word
 			return true
-
-	var decoded := decode_word(value)
-	if not decoded.is_empty() and decoded.length() == 5:
-		custom_word = decoded
-		return true
 
 	if date_regex.search(value):
 		var parsed_date := Time.get_datetime_dict_from_datetime_string(value, false)
@@ -187,48 +189,48 @@ func encode_word(word: String) -> String:
 	word = word.to_upper()
 
 	# Encode word in base 26
-	var num := 0
+	var num := 1 # Start with a single 1 bit
 	for i in range(word.length()):
-		var letter_ind := word[i].unicode_at(0) - 65 # 65 = ascii "A"
+		num *= 26
+		var letter_ind := word.unicode_at(i) - 65 # 65 = ascii "A"
 		if letter_ind < 0 or letter_ind >= 26:
 			return ""
-		num += letter_ind * (26 ** i)
-	# Add an offset so that "aaaaa" isn't just zeroes
-	num += 123456
+		num += letter_ind
 
-	return str(word.length()) + ENCODING_INDICATOR + large_encode(num)
+	# Bit count for redundancy
+	var count := popcnt(num)
+	num = (num << 6) + count
+
+	return ENCODING_INDICATOR + large_encode(num)
 
 
 ## Decodes an encoded word. Returns an empty string if invalid
 func decode_word(encoded_word: String) -> String:
-	var index := encoded_word.find(ENCODING_INDICATOR)
-	if index < 1:
-		return ""
-	var len_str := encoded_word.substr(0, index)
-	if not len_str.is_valid_int():
-		return ""
-	var word_len := len_str.to_int()
-	if word_len < 1:
+	if not encoded_word.begins_with(ENCODING_INDICATOR):
 		return ""
 
-	var large_base_str := encoded_word.substr(index + 1)
-	var num := large_decode(large_base_str)
-	if num < 0:
+	var large_base_str := encoded_word.substr(1)
+	var full_num := large_decode(large_base_str)
+
+	# Check the bit count
+	var count := full_num & 0x3F # 6 bits
+	var num := full_num >> 6
+	if popcnt(num) != count:
 		return ""
 
-	num -= 123456
-
-	if num < 0 or num >= (26 ** word_len): # (26 ** 5) - 1 = "ZZZZZ"
-		# Someone is trying to be sneaky! Or more likely I just messed up.
+	if num <= 0:
 		return ""
 
 	# Decode base 26 word
 	var word := ""
-	for i in range(word_len):
+	while num > 1:
 		var letter_ind := num % 26
-		word += char(letter_ind + 65) # 65 = ascii "A"
+		word = char(letter_ind + 65) + word # 65 = ascii "A"
 		@warning_ignore("integer_division")
 		num = num / 26
+
+	if num != 1:
+		return ""
 
 	return word
 

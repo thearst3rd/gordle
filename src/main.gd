@@ -1,7 +1,6 @@
 extends Control
 
 
-const letter_count := 5
 const guess_count := 6
 
 const Letter := preload("res://src/letter.tscn")
@@ -13,6 +12,7 @@ const Letter := preload("res://src/letter.tscn")
 # An array of arrays of the letter nodes
 var letters := []
 var keyboard_buttons := {}
+var letter_count := 5
 
 var target_word: String
 var current_guess: int
@@ -37,16 +37,6 @@ var input_guess: String
 
 
 func _ready() -> void:
-	letter_grid.columns = letter_count
-	for _i in range(guess_count):
-		var letter_array := []
-		for _j in range(letter_count):
-			var letter := Letter.instantiate()
-			letter_array.append(letter)
-			letter_grid.add_child(letter)
-		letters.append(letter_array)
-
-
 	if Global.game_mode != Global.GameMode.CUSTOM:
 		Global.custom_word = ""
 		Global.custom_date_str = ""
@@ -74,6 +64,16 @@ func _ready() -> void:
 
 		if Global.game_mode != Global.GameMode.DAILY:
 			subtitle.text = Global.encode_word(target_word)
+
+	letter_count = target_word.length()
+	letter_grid.columns = letter_count
+	for _i in range(guess_count):
+		var letter_array := []
+		for _j in range(letter_count):
+			var letter := Letter.instantiate()
+			letter_array.append(letter)
+			letter_grid.add_child(letter)
+		letters.append(letter_array)
 
 	current_guess = 0
 	ended = false
@@ -132,7 +132,7 @@ func guess_entered() -> void:
 		return
 	input_guess = input_guess.to_upper()
 	if input_guess.length() != letter_count:
-		show_error("Word must be five characters.")
+		show_error("Word must be %d characters." % [letter_count])
 		return
 	if not Global.is_valid_word(input_guess) and input_guess != target_word:
 		show_error("Not a recognized word.")
