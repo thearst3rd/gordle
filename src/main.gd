@@ -52,7 +52,7 @@ func _ready() -> void:
 	else:
 		var random_seed = null
 		if Global.game_mode == Global.GameMode.DAILY:
-			var current_time := Time.get_date_string_from_system(true)
+			var current_time := Time.get_date_string_from_system(false)
 			random_seed = Time.get_unix_time_from_datetime_string(current_time)
 
 			title.text = "Daily " + title.text

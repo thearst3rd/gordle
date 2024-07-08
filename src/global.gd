@@ -160,7 +160,7 @@ func parse_custom(value: String) -> bool:
 		if new_time != 0 or (parsed_date["year"] == 1970 and parsed_date["month"] == 1 and parsed_date["day"] == 1):
 			valid = true
 			if not allow_future:
-				var current_time := Time.get_unix_time_from_datetime_string(Time.get_date_string_from_system(true))
+				var current_time := Time.get_unix_time_from_datetime_string(Time.get_date_string_from_system(false))
 				if new_time > current_time:
 					valid = false
 		if valid:

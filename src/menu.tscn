@@ -107,7 +107,7 @@ text = "Daily Gordle"
 [node name="Label" type="Label" parent="C/V/V2/V"]
 layout_mode = 2
 theme_override_fonts/font = SubResource("2")
-text = "Changes at midnight UTC"
+text = "Changes at midnight local time"
 label_settings = SubResource("LabelSettings_17upj")
 horizontal_alignment = 1
 
