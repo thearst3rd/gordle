@@ -233,63 +233,73 @@ layout_mode = 2
 size_flags_horizontal = 4
 
 [node name="ButtonQ" type="Button" parent="C/V/KeyboardVBox/HRow1"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "Q"
 
 [node name="ButtonW" type="Button" parent="C/V/KeyboardVBox/HRow1"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "W"
 
 [node name="ButtonE" type="Button" parent="C/V/KeyboardVBox/HRow1"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "E"
 
 [node name="ButtonR" type="Button" parent="C/V/KeyboardVBox/HRow1"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "R"
 
 [node name="ButtonT" type="Button" parent="C/V/KeyboardVBox/HRow1"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "T"
 
 [node name="ButtonY" type="Button" parent="C/V/KeyboardVBox/HRow1"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "Y"
 
 [node name="ButtonU" type="Button" parent="C/V/KeyboardVBox/HRow1"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "U"
 
 [node name="ButtonI" type="Button" parent="C/V/KeyboardVBox/HRow1"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "I"
 
 [node name="ButtonO" type="Button" parent="C/V/KeyboardVBox/HRow1"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "O"
 
 [node name="ButtonP" type="Button" parent="C/V/KeyboardVBox/HRow1"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "P"
 
 [node name="HRow2" type="HBoxContainer" parent="C/V/KeyboardVBox"]
@@ -297,57 +307,66 @@ layout_mode = 2
 size_flags_horizontal = 4
 
 [node name="ButtonA" type="Button" parent="C/V/KeyboardVBox/HRow2"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "A"
 
 [node name="ButtonS" type="Button" parent="C/V/KeyboardVBox/HRow2"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "S"
 
 [node name="ButtonD" type="Button" parent="C/V/KeyboardVBox/HRow2"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "D"
 
 [node name="ButtonF" type="Button" parent="C/V/KeyboardVBox/HRow2"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "F"
 
 [node name="ButtonG" type="Button" parent="C/V/KeyboardVBox/HRow2"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "G"
 
 [node name="ButtonH" type="Button" parent="C/V/KeyboardVBox/HRow2"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "H"
 
 [node name="ButtonJ" type="Button" parent="C/V/KeyboardVBox/HRow2"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "J"
 
 [node name="ButtonK" type="Button" parent="C/V/KeyboardVBox/HRow2"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "K"
 
 [node name="ButtonL" type="Button" parent="C/V/KeyboardVBox/HRow2"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "L"
 
 [node name="HRow3" type="HBoxContainer" parent="C/V/KeyboardVBox"]
@@ -355,56 +374,64 @@ layout_mode = 2
 size_flags_horizontal = 4
 
 [node name="ButtonZ" type="Button" parent="C/V/KeyboardVBox/HRow3"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "Z"
 
 [node name="ButtonX" type="Button" parent="C/V/KeyboardVBox/HRow3"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "X"
 
 [node name="ButtonC" type="Button" parent="C/V/KeyboardVBox/HRow3"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "C"
 
 [node name="ButtonV" type="Button" parent="C/V/KeyboardVBox/HRow3"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "V"
 
 [node name="ButtonB" type="Button" parent="C/V/KeyboardVBox/HRow3"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "B"
 
 [node name="ButtonN" type="Button" parent="C/V/KeyboardVBox/HRow3"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "N"
 
 [node name="ButtonM" type="Button" parent="C/V/KeyboardVBox/HRow3"]
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(58, 58)
 layout_mode = 2
 focus_mode = 0
+theme_override_font_sizes/font_size = 44
 text = "M"
 
 [node name="ButtonBksp" type="Button" parent="C/V/KeyboardVBox/HRow3"]
 unique_name_in_owner = true
-custom_minimum_size = Vector2(50, 0)
+custom_minimum_size = Vector2(86, 58)
 layout_mode = 2
 focus_mode = 0
-text = "bksp"
+text = "⌫"
 
 [node name="GuessButton" type="Button" parent="C/V/KeyboardVBox"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
 layout_mode = 2
 size_flags_horizontal = 4
 focus_mode = 0
@@ -413,6 +440,7 @@ text = "Guess"
 
 [node name="ShareButton" type="Button" parent="C/V/KeyboardVBox/GuessButton"]
 unique_name_in_owner = true
+custom_minimum_size = Vector2(120, 0)
 layout_mode = 0
 offset_left = 180.0
 offset_right = 283.0
