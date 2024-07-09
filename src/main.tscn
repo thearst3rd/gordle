@@ -429,7 +429,7 @@ unique_name_in_owner = true
 custom_minimum_size = Vector2(86, 58)
 layout_mode = 2
 focus_mode = 0
-text = "⌫"
+text = "bksp"
 
 [node name="GuessButton" type="Button" parent="C/V/KeyboardVBox"]
 unique_name_in_owner = true
