@@ -20,6 +20,18 @@ var ended: bool
 var won: bool
 var input_guess: String
 
+# Array from position -> 1 character string, if the letter is green, else null if not green yet. In strict mode, once a
+# green letter is found, it has to be used in all subsequent guesses.
+var strict_green_requirements: Array = [] # Array[String or null]
+# Array of guessed letters which were green or yellow. In strict mode, these letters must be used in subsequent guesses.
+var strict_letter_requirements: Array[String] = []
+# Array from position index -> Array of letters which have been found yellow at that index. In strict mode, these yellow
+# must not be used at this position in subsequent guesses.
+var strict_yellow_restrictions: Array[Array] = [] # Array[Array[String]]
+# Array of guessed letters which aren't in the target word. In strict mode, these letters cannot be used in subsequent
+# guesses more times than they have been seen as green or yellow letters.
+var strict_gray_restrictions: Array[String] = []
+
 @onready var title: Label = %Title
 @onready var subtitle: Label = %Subtitle
 @onready var letter_grid: GridContainer = %LetterGrid
@@ -32,6 +44,8 @@ var input_guess: String
 
 @onready var info_text_animation: AnimationPlayer = %InfoTextAnimation
 @onready var copied_text_animation: AnimationPlayer = %CopiedTextAnimation
+
+@onready var strict_button: CheckButton = %StrictButton
 
 @onready var error_text_color_default := info_text.label_settings.font_color
 
@@ -77,6 +91,14 @@ func _ready() -> void:
 			letter_grid.add_child(letter)
 		letters.append(letter_array)
 
+	strict_green_requirements = []
+	strict_green_requirements.resize(letter_count)
+	strict_letter_requirements = []
+	strict_yellow_restrictions = []
+	for _i in range(letter_count):
+		strict_yellow_restrictions.push_back([])
+	strict_gray_restrictions = []
+
 	current_guess = 0
 	ended = false
 	won = false
@@ -89,6 +111,8 @@ func _ready() -> void:
 		assert(not error)
 
 	share_button.hide()
+
+	strict_button.button_pressed = Global.strict_mode
 
 
 func type_letter(letter: String) -> void:
@@ -136,15 +160,70 @@ func guess_entered() -> void:
 	if input_guess.length() != letter_count:
 		show_error("Word must be %d characters." % [letter_count])
 		return
+
+	if Global.strict_mode:
+		# Strict mode requirements:
+		#
+		# * Letters that have been previously green must be used again
+		# * Letters that have been previously yellow cannot be used again in the same position
+		# * Every letter that has been previously yellow must be used somewhere
+		# * Every letter that has been gray cannot be used, except if it has been found to be green or yellow, in which
+		#     case it must be used exactly the correct number of times
+		#
+		# It is possible to rearrange this block to reduce the number of conditions, but doing it this way makes the
+		# error messages more intuitive in my opinion
+		for i in range(letter_count):
+			var letter := input_guess[i]
+			var green = strict_green_requirements[i] # String | null
+			if green and (letter != green):
+				show_error("Letter %d must be %s." % [i + 1, green])
+				return
+			var yellows: Array[String] = []
+			yellows.assign(strict_yellow_restrictions[i])
+			if letter in yellows:
+				show_error("Letter %d cannot be %s." % [i + 1, letter])
+				return
+		var input_letters := Array(input_guess.split(""))
+		var used_requirements: Array[String] = []
+		for present_letter in strict_letter_requirements:
+			if present_letter not in input_letters:
+				var count := strict_letter_requirements.count(present_letter)
+				var count_str := (" %dx" % count) if count > 1 else ""
+				show_error("Letter %s must be used%s." % [present_letter, count_str])
+				return
+			used_requirements.push_back(present_letter)
+			input_letters.erase(present_letter)
+		for i in letter_count:
+			var letter := input_guess[i]
+			if letter in strict_gray_restrictions:
+				if letter not in used_requirements:
+					var count := strict_letter_requirements.count(letter)
+					# We love nested ternaries
+					var count_str = (" more than %d time%s" % [count, "" if count == 1 else "s"]) if count > 0 else ""
+					show_error("Letter %s cannot be used%s." % [letter, count_str])
+					return
+				used_requirements.erase(letter)
+
 	if not Global.is_valid_word(input_guess) and input_guess != target_word:
 		show_error("Not a recognized word.")
 		return
+
+	# This is a valid guess. Strict mode can no longer be changed!
+	strict_button.disabled = true
 
 	var letters_remaining = []
 	for letter in target_word:
 		letters_remaining.append(letter)
 
 	hide_info()
+
+	if Global.strict_mode:
+		strict_letter_requirements = []
+		var target_letters := Array(target_word.split(""))
+		for letter in input_guess:
+			if letter in target_letters:
+				strict_letter_requirements.push_back(letter)
+				target_letters.erase(letter)
 
 	# Mark all greens
 	for i in range(letter_count):
@@ -154,6 +233,8 @@ func guess_entered() -> void:
 		var letter_instance := letters[current_guess][i] as ColorRect
 		letter_instance.get_node("Label").text = guess_letter
 		if guess_letter == target_letter:
+			if Global.strict_mode:
+				strict_green_requirements[i] = guess_letter
 			letter_instance.color = color_correct
 			keyboard_buttons[target_letter].modulate = color_correct
 			# Remove that one letter from remaining letters (is there a function for this?)
@@ -177,9 +258,13 @@ func guess_entered() -> void:
 				break
 		if found:
 			letter_instance.color = color_misplaced
+			if Global.strict_mode:
+				strict_yellow_restrictions[i].push_back(guess_letter)
 			if keyboard_buttons[guess_letter].modulate != color_correct:
 				keyboard_buttons[guess_letter].modulate = color_misplaced
 		else:
+			if Global.strict_mode:
+				strict_gray_restrictions.push_back(guess_letter)
 			letter_instance.color = color_incorrect
 			if keyboard_buttons[guess_letter].modulate not in [color_correct, color_misplaced]:
 				keyboard_buttons[guess_letter].modulate = color_incorrect
@@ -238,14 +323,17 @@ func _on_ButtonBksp_pressed() -> void:
 
 
 func _on_share_button_pressed() -> void:
-	var text := "%s %s\n" % [title.text, subtitle.text]
+	var text := "%s %s " % [title.text, subtitle.text]
 	if won:
-		text += "%d/%d\n\n" % [current_guess, guess_count]
+		text += "%d/%d" % [current_guess, guess_count]
 	elif ended:
-		text += "X/%d\n\n" % [guess_count]
+		text += "X/%d" % [guess_count]
 	else:
 		# Can probably bail early but I might as allow it
-		text += "?/%d\n\n" % [guess_count]
+		text += "?/%d" % [guess_count]
+	if strict_button.button_pressed:
+		text += "*"
+	text += "\n\n"
 
 	for i in range(current_guess):
 		for j in range(letter_count):
@@ -262,3 +350,7 @@ func _on_share_button_pressed() -> void:
 	DisplayServer.clipboard_set(text)
 	copied_text_animation.stop()
 	copied_text_animation.play("Copied")
+
+
+func _on_strict_button_toggled(toggled_on: bool) -> void:
+	Global.strict_mode = toggled_on

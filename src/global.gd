@@ -30,6 +30,8 @@ var all_words: Dictionary
 
 var allow_future := false
 
+var strict_mode := false
+
 
 func _ready() -> void:
 	randomize()
