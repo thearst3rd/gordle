@@ -38,6 +38,7 @@ func _ready() -> void:
 	generable_words = parse_words(GENERABLE_WORDS_FILENAME, MIN_WORD_LENGTH, MAX_WORD_LENGTH)
 	all_words = parse_words(ALL_WORDS_FILENAME, MIN_WORD_LENGTH, MAX_WORD_LENGTH)
 
+	fix_hovering()
 	detect_params()
 
 
@@ -81,6 +82,15 @@ func is_valid_word(word: String) -> bool:
 	var words_list := all_words[length] as Array
 
 	return word.to_upper() in words_list
+
+
+## Fixes the theme so that on mobile, buttons don't incorrectly show as hovered
+func fix_hovering() -> void:
+	if OS.has_feature("mobile") or OS.has_feature("web_android") or OS.has_feature("web_ios"):
+		var default_theme := ThemeDB.get_default_theme()
+		var project_theme := ThemeDB.get_project_theme()
+		var stylebox := default_theme.get_stylebox("normal", "Button")
+		project_theme.set_stylebox("hover", "Button", stylebox)
 
 
 ## Checks for command line/URL parameters and configures the game accordingly
